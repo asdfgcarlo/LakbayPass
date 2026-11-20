@@ -26,10 +26,11 @@ if not app.secret_key:
         pass
     app.secret_key = key_file.read_text(encoding='utf-8').strip()
 app.config.update(
-    MYSQL_HOST=os.environ.get('LAKBAYPASS_MYSQL_HOST', 'localhost'),
-    MYSQL_USER=os.environ.get('LAKBAYPASS_MYSQL_USER', 'root'),
-    MYSQL_PASSWORD=os.environ.get('LAKBAYPASS_MYSQL_PASSWORD', ''),
-    MYSQL_DB=os.environ.get('LAKBAYPASS_MYSQL_DB', 'lakbaypass'),
+    MYSQL_HOST=os.environ.get('LAKBAYPASS_MYSQL_HOST', 'sql12.freesqldatabase.com'),
+    MYSQL_USER=os.environ.get('LAKBAYPASS_MYSQL_USER', 'sql12841075'),
+    MYSQL_PASSWORD=os.environ.get('LAKBAYPASS_MYSQL_PASSWORD', 'BdFpCtEVNb'),
+    MYSQL_DB=os.environ.get('LAKBAYPASS_MYSQL_DB', 'sql12841075'),
+    MYSQL_DB=os.environ.get('LAKBAYPASS_PORT', 3306),
     SESSION_COOKIE_SAMESITE='Lax',
 )
 mysql = MySQL(app)
