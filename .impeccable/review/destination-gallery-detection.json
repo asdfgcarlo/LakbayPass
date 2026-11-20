@@ -1,0 +1,122 @@
+﻿[
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\templates\\lakbayDashboard.html",
+    "line": 0,
+    "snippet": "text color rgb(0, 0, 0) on p \"Welcome, {{ username }}!\" is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "rgb(0, 0, 0)"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 41,
+    "snippet": "Undocumented color #deded5 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#deded5"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 166,
+    "snippet": "Undocumented color #e4e9e1 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e4e9e1"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 187,
+    "snippet": "Undocumented color #e4e9e1 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e4e9e1"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 190,
+    "snippet": "Undocumented color #eae5db is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#eae5db"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 193,
+    "snippet": "Undocumented color #e0e8e6 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e0e8e6"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 196,
+    "snippet": "Undocumented color #e8e9dd is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e8e9dd"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 199,
+    "snippet": "Undocumented color #e1e8eb is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e1e8eb"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 202,
+    "snippet": "Undocumented color #e5e8df is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e5e8df"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "D:\\lakbayPass\\static\\dashboard.css",
+    "line": 326,
+    "snippet": "Undocumented color #e1e3d9 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#e1e3d9"
+  }
+]

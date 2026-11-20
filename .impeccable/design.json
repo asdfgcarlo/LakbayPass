@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T07:50:31.798Z",
+  "title": "Design System: LakbayPass",
+  "extensions": {
+    "colorMeta": {
+      "page": {
+        "role": "neutral",
+        "displayName": "Warm Off-White",
+        "tonalRamp": [
+          "oklch(15% 0.0032 88.6)",
+          "oklch(26% 0.0051 88.6)",
+          "oklch(38% 0.0065 88.6)",
+          "oklch(50% 0.0070 88.6)",
+          "oklch(62% 0.0065 88.6)",
+          "oklch(74% 0.0051 88.6)",
+          "oklch(86% 0.0030 88.6)",
+          "oklch(95% 0.0011 88.6)"
+        ]
+      },
+      "card": {
+        "role": "primary",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0)",
+          "oklch(26% 0.0000 0)",
+          "oklch(38% 0.0000 0)",
+          "oklch(50% 0.0000 0)",
+          "oklch(62% 0.0000 0)",
+          "oklch(74% 0.0000 0)",
+          "oklch(86% 0.0000 0)",
+          "oklch(95% 0.0000 0)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Charcoal",
+        "tonalRamp": [
+          "oklch(15% 0.0033 118.3)",
+          "oklch(26% 0.0053 118.3)",
+          "oklch(38% 0.0067 118.3)",
+          "oklch(50% 0.0072 118.3)",
+          "oklch(62% 0.0067 118.3)",
+          "oklch(74% 0.0053 118.3)",
+          "oklch(86% 0.0031 118.3)",
+          "oklch(95% 0.0011 118.3)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Warm Gray",
+        "tonalRamp": [
+          "oklch(15% 0.0049 113.4)",
+          "oklch(26% 0.0079 113.4)",
+          "oklch(38% 0.0101 113.4)",
+          "oklch(50% 0.0108 113.4)",
+          "oklch(62% 0.0101 113.4)",
+          "oklch(74% 0.0079 113.4)",
+          "oklch(86% 0.0046 113.4)",
+          "oklch(95% 0.0017 113.4)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Soft Olive Gray",
+        "tonalRamp": [
+          "oklch(15% 0.0068 120.4)",
+          "oklch(26% 0.0108 120.4)",
+          "oklch(38% 0.0138 120.4)",
+          "oklch(50% 0.0149 120.4)",
+          "oklch(62% 0.0138 120.4)",
+          "oklch(74% 0.0108 120.4)",
+          "oklch(86% 0.0063 120.4)",
+          "oklch(95% 0.0023 120.4)"
+        ]
+      },
+      "error": {
+        "role": "functional",
+        "displayName": "Warm Error Red",
+        "tonalRamp": [
+          "oklch(15% 0.0557 27.1)",
+          "oklch(26% 0.0895 27.1)",
+          "oklch(38% 0.1142 27.1)",
+          "oklch(50% 0.1228 27.1)",
+          "oklch(62% 0.1142 27.1)",
+          "oklch(74% 0.0895 27.1)",
+          "oklch(86% 0.0523 27.1)",
+          "oklch(95% 0.0192 27.1)"
+        ]
+      },
+      "primary-hover": {
+        "role": "neutral",
+        "displayName": "Charcoal Hover",
+        "tonalRamp": [
+          "oklch(15% 0.0061 118.5)",
+          "oklch(26% 0.0098 118.5)",
+          "oklch(38% 0.0126 118.5)",
+          "oklch(50% 0.0135 118.5)",
+          "oklch(62% 0.0126 118.5)",
+          "oklch(74% 0.0098 118.5)",
+          "oklch(86% 0.0058 118.5)",
+          "oklch(95% 0.0021 118.5)"
+        ]
+      },
+      "primary-active": {
+        "role": "neutral",
+        "displayName": "Charcoal Active",
+        "tonalRamp": [
+          "oklch(15% 0.0034 118.4)",
+          "oklch(26% 0.0055 118.4)",
+          "oklch(38% 0.0070 118.4)",
+          "oklch(50% 0.0076 118.4)",
+          "oklch(62% 0.0070 118.4)",
+          "oklch(74% 0.0055 118.4)",
+          "oklch(86% 0.0032 118.4)",
+          "oklch(95% 0.0012 118.4)"
+        ]
+      },
+      "primary-disabled": {
+        "role": "neutral",
+        "displayName": "Charcoal Disabled",
+        "tonalRamp": [
+          "oklch(15% 0.0072 116.2)",
+          "oklch(26% 0.0115 116.2)",
+          "oklch(38% 0.0147 116.2)",
+          "oklch(50% 0.0158 116.2)",
+          "oklch(62% 0.0147 116.2)",
+          "oklch(74% 0.0115 116.2)",
+          "oklch(86% 0.0067 116.2)",
+          "oklch(95% 0.0025 116.2)"
+        ]
+      },
+      "canvas-bg": {
+        "role": "neutral",
+        "displayName": "Canvas Background",
+        "tonalRamp": [
+          "oklch(15% 0.0032 88.6)",
+          "oklch(26% 0.0051 88.6)",
+          "oklch(38% 0.0065 88.6)",
+          "oklch(50% 0.0070 88.6)",
+          "oklch(62% 0.0065 88.6)",
+          "oklch(74% 0.0051 88.6)",
+          "oklch(86% 0.0030 88.6)",
+          "oklch(95% 0.0011 88.6)"
+        ]
+      },
+      "canvas-text": {
+        "role": "neutral",
+        "displayName": "Canvas Text",
+        "tonalRamp": [
+          "oklch(15% 0.0033 118.3)",
+          "oklch(26% 0.0053 118.3)",
+          "oklch(38% 0.0067 118.3)",
+          "oklch(50% 0.0072 118.3)",
+          "oklch(62% 0.0067 118.3)",
+          "oklch(74% 0.0053 118.3)",
+          "oklch(86% 0.0031 118.3)",
+          "oklch(95% 0.0011 118.3)"
+        ]
+      },
+      "canvas-muted": {
+        "role": "neutral",
+        "displayName": "Canvas Muted",
+        "tonalRamp": [
+          "oklch(15% 0.0049 113.4)",
+          "oklch(26% 0.0079 113.4)",
+          "oklch(38% 0.0101 113.4)",
+          "oklch(50% 0.0108 113.4)",
+          "oklch(62% 0.0101 113.4)",
+          "oklch(74% 0.0079 113.4)",
+          "oklch(86% 0.0046 113.4)",
+          "oklch(95% 0.0017 113.4)"
+        ]
+      },
+      "canvas-control": {
+        "role": "neutral",
+        "displayName": "Canvas Control",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0)",
+          "oklch(26% 0.0000 0)",
+          "oklch(38% 0.0000 0)",
+          "oklch(50% 0.0000 0)",
+          "oklch(62% 0.0000 0)",
+          "oklch(74% 0.0000 0)",
+          "oklch(86% 0.0000 0)",
+          "oklch(95% 0.0000 0)"
+        ]
+      },
+      "canvas-border": {
+        "role": "neutral",
+        "displayName": "Canvas Border",
+        "tonalRamp": [
+          "oklch(15% 0.0068 120.4)",
+          "oklch(26% 0.0108 120.4)",
+          "oklch(38% 0.0138 120.4)",
+          "oklch(50% 0.0149 120.4)",
+          "oklch(62% 0.0138 120.4)",
+          "oklch(74% 0.0108 120.4)",
+          "oklch(86% 0.0063 120.4)",
+          "oklch(95% 0.0023 120.4)"
+        ]
+      }
+    },
+    "destinationAccents": {
+      "palawan": "#3d5a36",
+      "vigan": "#795833",
+      "cebu": "#24645c",
+      "siquijor": "#87613b",
+      "siargao": "#21606b",
+      "camiguin": "#245d7b"
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Title",
+        "purpose": "Login and registration form heading; 26px at 480px, 24px at 350px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Supporting description below the heading."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Persistent field label."
+      },
+      "input": {
+        "displayName": "Input",
+        "purpose": "Entered values and supplementary placeholders."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Primary action label."
+      },
+      "canvas-destination": {
+        "displayName": "Canvas Destination",
+        "purpose": "Place name below each landscape tile."
+      },
+      "canvas-attraction": {
+        "displayName": "Canvas Attraction",
+        "purpose": "Muted attraction name beneath the destination."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card",
+        "value": "10px 14px 36px #38382e0c, -8px -8px 24px #ffffffb3, inset 0 1px 2px #ffffff, inset 0 -2px 4px #302e2710",
+        "purpose": "Subtle ambient clay depth on authentication cards."
+      },
+      {
+        "name": "input",
+        "value": "inset 0 2px 3px #35362e05",
+        "purpose": "Very light inset field depth."
+      },
+      {
+        "name": "primary",
+        "value": "0 4px 8px #2c2d291c, inset 0 1px 1px #ffffff24, inset 0 -2px 3px #00000026",
+        "purpose": "Primary action at rest."
+      },
+      {
+        "name": "primary-hover",
+        "value": "0 6px 12px #2c2d2926, inset 0 1px 1px #ffffff24",
+        "purpose": "Primary action hover."
+      },
+      {
+        "name": "primary-active",
+        "value": "inset 0 2px 4px #00000026",
+        "purpose": "Primary action press."
+      },
+      {
+        "name": "primary-disabled",
+        "value": "inset 0 1px 2px #0000001a",
+        "purpose": "Pending submission."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "160ms ease-out",
+        "purpose": "Input border/shadow and primary background/shadow changes only; no movement."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "none",
+        "purpose": "Remove transitions under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "480px"
+      },
+      {
+        "name": "small-phone",
+        "value": "350px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Full-width authentication action with explicit hover, press, focus, and disabled states.",
+      "html": "<button class=\"ds-primary\" type=\"button\"><span>Log in</span><svg class=\"ds-arrow\" viewBox=\"0 0 20 20\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 10h12m-5-5 5 5-5 5\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button>",
+      "css": ".ds-primary{font-family:\"Segoe UI\", -apple-system, BlinkMacSystemFont, sans-serif;display:flex;align-items:center;justify-content:center;position:relative;width:100%;min-height:52px;padding:14px 44px;border:0;border-radius:var(--radius-control,10px);background:var(--text, #2c2d29);color:var(--card, #ffffff);box-shadow:0 4px 8px #2c2d291c,inset 0 1px 1px #ffffff24,inset 0 -2px 3px #00000026;font-size:15px;line-height:1.5;font-weight:600;cursor:pointer;transition:background-color 160ms ease-out,box-shadow 160ms ease-out}.ds-primary:hover{background:#42443c;box-shadow:0 6px 12px #2c2d2926,inset 0 1px 1px #ffffff24}.ds-primary:active{background:#20211d;box-shadow:inset 0 2px 4px #00000026}.ds-primary:focus-visible{outline:2px solid var(--text, #2c2d29);outline-offset:4px;}.ds-primary:disabled{cursor:wait;background:#5e6056;box-shadow:inset 0 1px 2px #0000001a}.ds-arrow{position:absolute;right:18px;width:20px;height:20px}.ds-primary:disabled .ds-arrow{visibility:hidden}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}@media(forced-colors:active){.ds-primary{border:1px solid ButtonText}}"
+    },
+    {
+      "name": "Labeled Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Persistent label, outlined field, and associated inline error region.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-email\">Email address</label><input class=\"ds-input\" id=\"ds-email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" aria-describedby=\"ds-email-error\" aria-invalid=\"false\" required><p class=\"ds-error\" id=\"ds-email-error\" aria-live=\"polite\" hidden>Enter your email address.</p></div>",
+      "css": ".ds-field{font-family:\"Segoe UI\", -apple-system, BlinkMacSystemFont, sans-serif;color:var(--text, #2c2d29)}.ds-label{display:block;margin-bottom:8px;font-size:14px;font-weight:600;line-height:1.5}.ds-input{font-family:\"Segoe UI\", -apple-system, BlinkMacSystemFont, sans-serif;box-sizing:border-box;display:block;width:100%;height:50px;min-width:0;padding:12px 14px;border:1px solid var(--line, #92958b);border-radius:var(--radius-control,10px);background:var(--card, #ffffff);color:var(--text, #2c2d29);font-size:16px;line-height:1.5;caret-color:var(--text, #2c2d29);box-shadow:inset 0 2px 3px #35362e05;transition:border-color 160ms ease-out,box-shadow 160ms ease-out}.ds-input::placeholder{color:#72746a;opacity:1}.ds-input:hover{border-color:#6e7167}.ds-input:focus-visible{outline:2px solid var(--text, #2c2d29);outline-offset:3px;border-color:var(--text, #2c2d29)}.ds-input[aria-invalid=\"true\"]{border-color:var(--error, #963c35)}.ds-error{margin:8px 0 0;color:var(--error, #963c35);font-size:13px;line-height:1.5;overflow-wrap:anywhere}.ds-error[hidden]{display:none}@media(prefers-reduced-motion:reduce){.ds-input{transition:none}}"
+    },
+    {
+      "name": "Authentication Card",
+      "kind": "card",
+      "refersTo": "auth-card",
+      "description": "White, softly raised container for the shared login and registration form.",
+      "html": "<section class=\"ds-card\" aria-labelledby=\"ds-card-heading\"><h2 class=\"ds-card-heading\" id=\"ds-card-heading\">Welcome back</h2><p class=\"ds-card-description\">Log in to your account.</p></section>",
+      "css": ".ds-card{font-family:\"Segoe UI\", -apple-system, BlinkMacSystemFont, sans-serif;box-sizing:border-box;width:100%;max-width:448px;padding:38px 36px 28px;border-radius:var(--radius-card,16px);background:var(--card, #ffffff);color:var(--text, #2c2d29);box-shadow:10px 14px 36px #38382e0c,-8px -8px 24px #ffffffb3,inset 0 1px 2px #ffffff,inset 0 -2px 4px #302e2710}.ds-card-heading{margin:0 0 8px;font-size:28px;line-height:1.25;font-weight:650;letter-spacing:-.7px;text-wrap:balance}.ds-card-description{margin:0;color:var(--muted, #696a63);font-size:15px;line-height:1.6}@media(max-width:480px){.ds-card{padding:28px 24px 20px}.ds-card-heading{font-size:26px}}@media(max-width:350px){.ds-card{padding-inline:20px}.ds-card-heading{font-size:24px}}@media(forced-colors:active){.ds-card{border:1px solid CanvasText}}"
+    },
+    {
+      "name": "Canvas Controls",
+      "kind": "custom",
+      "refersTo": "canvas-controls",
+      "description": "Compact white gallery controls with dark text, at least 44px targets, and visible focus.",
+      "html": "<div class=\"ds-canvas-controls\" role=\"group\" aria-label=\"Gallery controls\"><button class=\"ds-canvas-playback\" type=\"button\" aria-label=\"Pause automatic movement\" aria-pressed=\"true\"><svg viewBox=\"0 0 20 20\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M6 5h3v10H6zm5 0h3v10h-3z\"/></svg><span>Pause</span></button><span class=\"ds-canvas-divider\" aria-hidden=\"true\"></span><button type=\"button\" aria-label=\"Move canvas left\"><svg viewBox=\"0 0 20 20\" fill=\"none\" aria-hidden=\"true\"><path d=\"m12 5-5 5 5 5M7 10h9\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></div>",
+      "css": ".ds-canvas-controls button{font:inherit}.ds-canvas-controls { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; padding: 6px; border: 1px solid var(--canvas-border,#92958b); border-radius: 999px; background: var(--canvas-control,#ffffff); box-shadow: 0 8px 28px #2c2d2914; pointer-events: auto; }.ds-canvas-controls button { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 50%; color: var(--canvas-text,#2c2d29); background: transparent; cursor: pointer; transition: background-color 160ms ease-out; }.ds-canvas-controls button:hover { background: #eeeee8; }.ds-canvas-controls button:active { background: #e1e3d9; }.ds-canvas-controls .ds-canvas-playback { min-width: 80px; gap: 5px; border-radius: 999px; font-size: 13px; font-weight: 500; }.ds-canvas-controls svg { width: 20px; height: 20px; }.ds-canvas-controls{font-family:\"Segoe UI\",-apple-system,BlinkMacSystemFont,sans-serif;color:var(--canvas-text,#2c2d29)}.ds-canvas-controls button:focus-visible{outline:2px solid var(--canvas-text,#2c2d29);outline-offset:4px}.ds-canvas-divider{height:20px;width:1px;background:var(--canvas-border,#92958b)}@media(prefers-reduced-motion:reduce){.ds-canvas-controls button{transition:none}}@media(forced-colors:active){.ds-canvas-controls{border:1px solid CanvasText}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Quiet Clay",
+    "overview": "Minimalist login and registration use white surfaces, warm off-white surroundings, and subtle clay lighting. Dark text keeps the forms readable. The signed-in dashboard carries the same warm off-white palette, dark captions, white controls, and a centered supplied logo behind the destination tiles.",
+    "keyCharacteristics": [
+      "White accent and warm neutrals.",
+      "Restrained clay depth and curved controls.",
+      "Persistent labels, clear focus, and explicit state feedback."
+    ],
+    "rules": [
+      {
+        "name": "The White Accent Rule",
+        "body": "Keep white as the accent; do not introduce pastel highlights.",
+        "section": "colors"
+      },
+      {
+        "name": "The Quiet Depth Rule",
+        "body": "Controls change color and shadow without moving or scaling.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Visible State Rule",
+        "body": "Preserve labels, focus outlines, adjacent error text, and explicit submission feedback.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do use white surfaces, warm off-white surroundings, and dark readable text.",
+      "Do keep login and registration on the same shared component system.",
+      "Do retain compact-screen spacing, subtle clay lighting, and reduced-motion support."
+    ],
+    "donts": [
+      "Don't add pastel accents.",
+      "Don't replace labels or validation text with color alone.",
+      "Don't add movement to state transitions."
+    ]
+  }
+}

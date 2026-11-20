@@ -1,0 +1,71 @@
+{% macro field(name, label, type='text', autocomplete='', placeholder='') %}
+  <div class="field">
+    <label for="{{ name }}">{{ label }}</label>
+    <div class="{{ 'password-control' if type == 'password' else 'input-control' }}">
+      <input id="{{ name }}" name="{{ name }}" type="{{ type }}"
+        autocomplete="{{ autocomplete }}" required
+        {% if type != 'password' %}value="{{ values.get(name, '') }}" maxlength="100"{% endif %}
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if name in ['email', 'username'] %}autocapitalize="none" spellcheck="false"{% endif %}
+        aria-describedby="{{ name }}-error" aria-invalid="{{ 'true' if errors.get(name) else 'false' }}"
+        {% if errors.get(name) %}data-server-error="true"{% endif %}>
+      {% if type == 'password' %}
+        <button class="password-toggle" type="button" aria-controls="password"
+          aria-label="Show password" aria-pressed="false" hidden>Show</button>
+      {% endif %}
+    </div>
+    <p class="field-error" id="{{ name }}-error" aria-live="polite" {% if not errors.get(name) %}hidden{% endif %}>{{ errors.get(name, '') }}</p>
+  </div>
+{% endmacro %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f3ee">
+    <title>{{ action_label }} · LakbayPass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <script src="{{ url_for('static', filename='auth.js') }}" defer></script>
+  </head>
+  <body>
+    <main class="auth-page">
+      <div class="auth-shell">
+        <a class="brand" href="{{ url_for('login') }}" aria-label="LakbayPass home">
+          <img class="brand-logo" src="{{ url_for('static', filename='lakbayLogo.png') }}"
+            alt="LakbayPass" width="895" height="596">
+        </a>
+        <section class="auth-card" aria-labelledby="auth-heading">
+          <header class="card-heading">
+            <h1 id="auth-heading">{{ heading }}</h1>
+            <p>{{ description }}</p>
+          </header>
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+              <p class="form-notice" role="status">{{ message }}</p>
+            {% endfor %}
+          {% endwith %}
+          <form method="post" action="{{ url_for('register' if registering else 'login') }}"
+            class="auth-form" data-pending-label="{{ pending_label }}" aria-label="{{ action_label }}">
+            {% if registering %}{{ field('username', 'Username', autocomplete='username', placeholder='Your username') }}{% endif %}
+            {{ field('email', 'Email address', type='email', autocomplete='email', placeholder='you@example.com') }}
+            {{ field('password', 'Password', type='password', autocomplete='new-password' if registering else 'current-password') }}
+            <button class="primary-button" type="submit">
+              <span class="button-label">{{ action_label }}</span>
+              <svg class="button-arrow" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <p class="submission-status" role="status" aria-live="polite"></p>
+          </form>
+          <p class="auth-switch">
+            {% if registering %}
+              Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+            {% else %}
+              New to LakbayPass? <a href="{{ url_for('register') }}">Create an account</a>
+            {% endif %}
+          </p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

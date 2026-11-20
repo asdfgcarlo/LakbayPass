@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f3ee">
+    <meta name="description" content="Explore {{ place.destination }}, discover {{ place.attraction }}, and view your LakbayPass missions.">
+    <title>{{ place.destination }} · {{ place.attraction }} · LakbayPass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='destination.css') }}">
+    <script src="{{ url_for('static', filename='vendor/jsQR-1.4.0.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='scanner.js') }}" defer></script>
+  </head>
+  <body class="destination-page destination-{{ place.slug }}">
+    <a class="skip-link" href="#destination-content">Skip to destination</a>
+    <header class="page-header">
+      <a class="back-to-gallery" href="{{ url_for('dashboard') }}">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M16 10H4m5-5-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Back to gallery</span>
+      </a>
+      <div class="page-brand">
+        <img src="{{ url_for('static', filename='lakbayLogo.png') }}" alt="LakbayPass" width="895" height="596">
+      </div>
+    </header>
+
+    <main id="destination-content" class="destination-shell">
+      <article class="destination-overview" aria-labelledby="destination-title">
+        <div class="destination-photo">
+          <img class="destination-hero" src="{{ url_for('static', filename=place.image) }}"
+            alt="{% block photo_alt %}{{ place.attraction }} in {{ place.destination }}{% endblock %}"
+            fetchpriority="high" decoding="async">
+        </div>
+        <div class="destination-story">
+          <h1 id="destination-title">{{ place.destination }}</h1>
+          <p class="destination-description">{% block destination_description %}{% endblock %}</p>
+          <section class="attraction-story" aria-labelledby="attraction-title">
+            <h2 id="attraction-title">{{ place.attraction }}</h2>
+            <p>{% block attraction_description %}{% endblock %}</p>
+          </section>
+        </div>
+      </article>
+
+      <section class="missions" aria-labelledby="missions-title">
+        <div class="missions-heading">
+          <h2 id="missions-title">Your missions</h2>
+          <p>Get to know {{ place.destination }} through its places, food, and experiences.</p>
+          <p class="player-total">Total points <strong id="player-total">{{ progress.total_points }}</strong> <span>pts</span></p>
+        </div>
+        <div class="missions-content">
+          <ul class="mission-list" role="list">
+            {% for mission in progress.missions %}
+            <li data-mission-type="{{ mission.mission_type }}" class="{% if mission.claimed %}is-claimed{% endif %}">
+              <div class="mission-copy">
+                <h3>{{ mission.name }}</h3>
+                <p>{{ mission.description }}</p>
+              </div>
+              <div class="mission-reward">
+                <span class="mission-state" {% if not mission.claimed %}hidden{% endif %}>Claimed</span>
+                <span class="mission-score"><strong>{{ mission.points_awarded if mission.claimed else mission.points }}</strong> <span>pts</span></span>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="scanner-status" id="scanner-root" data-destination="{{ place.slug }}"
+            data-claim-url="{{ url_for('claim_points') }}" data-progress-url="{{ url_for('mission_progress', slug=place.slug) }}"
+            data-csrf="{{ session.claim_csrf }}" data-login-url="{{ url_for('login') }}">
+            <button class="scan-button" id="open-scanner" type="button" disabled
+              aria-controls="mission-scanner" aria-expanded="false" aria-describedby="scanner-note">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M6.5 3H3v3.5M13.5 3H17v3.5M17 13.5V17h-3.5M6.5 17H3v-3.5M5 10h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Scan a QR</span>
+            </button>
+            <p id="scanner-note">Scan a mission card to claim its points. Each mission can be claimed once.</p>
+            <noscript><p>Enable JavaScript in your browser to scan mission cards.</p></noscript>
+            <p id="claim-feedback" class="claim-feedback" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+            <section id="mission-scanner" class="qr-scanner" aria-labelledby="scanner-title" hidden>
+              <div class="scanner-heading">
+                <h3 id="scanner-title">Scan a {{ place.destination }} mission</h3>
+                <button id="close-scanner" class="scanner-close" type="button">Close</button>
+              </div>
+              <p>Point your camera at a mission QR code.</p>
+              <div class="camera-frame" hidden>
+                <video id="camera-preview" autoplay muted playsinline aria-label="Live camera preview"></video>
+              </div>
+              <p id="camera-status" role="status" aria-live="polite" aria-atomic="true"></p>
+              <button id="retry-scanner" class="scanner-retry" type="button" hidden>Scan another QR</button>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,416 @@
+:root {
+  color-scheme: light;
+  --canvas-bg: #f5f3ee;
+  --canvas-text: #2c2d29;
+  --canvas-muted: #696a63;
+  --canvas-control: #ffffff;
+  --canvas-border: #92958b;
+  --tile-width: 380px;
+  --tile-height: 270px;
+  --column-gap: 104px;
+  --row-gap: 72px;
+  --caption-height: 52px;
+  font-family:
+    "Segoe UI",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  background: var(--canvas-bg);
+  color: var(--canvas-text);
+  font-synthesis: none;
+  -webkit-text-size-adjust: 100%;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+a {
+  -webkit-tap-highlight-color: #deded5;
+}
+button {
+  font: inherit;
+}
+a {
+  color: inherit;
+  text-underline-offset: 4px;
+}
+::selection {
+  background: #deded5;
+  color: var(--canvas-text);
+}
+[hidden] {
+  display: none !important;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.canvas-brand {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+.canvas-brand img {
+  display: block;
+  flex: 0 0 auto;
+  width: min(980px, 145vw);
+  max-width: none;
+  height: auto;
+  opacity: 0.16;
+}
+
+.site-header {
+  position: fixed;
+  z-index: 5;
+  inset: 0 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  min-height: 96px;
+  padding: max(18px, env(safe-area-inset-top)) 36px 18px;
+  background: linear-gradient(var(--canvas-bg), #f5f3eee6 60%, #f5f3ee00);
+  pointer-events: none;
+}
+.welcome {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  color: var(--canvas-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.logout-link {
+  display: inline-flex;
+  justify-self: end;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 4px;
+  pointer-events: auto;
+}
+.logout-link svg {
+  width: 18px;
+  height: 18px;
+}
+.logout-link:hover {
+  text-decoration: underline;
+}
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--canvas-text);
+  outline-offset: 4px;
+}
+
+#photo-canvas {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 128px 36px 160px;
+}
+#photo-canvas:focus-visible {
+  outline: 2px solid var(--canvas-text);
+  outline-offset: -6px;
+}
+.canvas-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px 36px;
+  max-width: 1200px;
+  margin: auto;
+}
+.photo-tile {
+  display: block;
+  margin: 0;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  -webkit-user-drag: none;
+}
+.photo-tile figure {
+  margin: 0;
+}
+.photo-tile:focus-visible {
+  outline: 2px solid var(--canvas-text);
+  outline-offset: 6px;
+}
+.photo-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 38 / 27;
+  overflow: hidden;
+  background: #e4e9e1;
+}
+.photo-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.placeholder-label {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: calc(50% + 30px);
+  color: #5e6259;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+.photo-tile[data-destination="palawan"] .photo-media {
+  background: #e4e9e1;
+}
+.photo-tile[data-destination="vigan"] .photo-media {
+  background: #eae5db;
+}
+.photo-tile[data-destination="cebu"] .photo-media {
+  background: #e0e8e6;
+}
+.photo-tile[data-destination="siquijor"] .photo-media {
+  background: #e8e9dd;
+}
+.photo-tile[data-destination="siargao"] .photo-media {
+  background: #e1e8eb;
+}
+.photo-tile[data-destination="camiguin"] .photo-media {
+  background: #e5e8df;
+}
+figcaption {
+  height: var(--caption-height);
+  padding-top: 12px;
+  background: var(--canvas-bg);
+}
+.destination-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+.attraction-name {
+  display: block;
+  color: var(--canvas-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+#photo-canvas.canvas-ready {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+.canvas-ready .canvas-tiles {
+  position: absolute;
+  inset: 0;
+  display: block;
+  max-width: none;
+  margin: 0;
+  pointer-events: none;
+}
+.canvas-ready .photo-tile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--tile-width);
+  height: calc(var(--tile-height) + var(--caption-height));
+  will-change: transform;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.canvas-ready .photo-media {
+  width: var(--tile-width);
+  height: var(--tile-height);
+  aspect-ratio: auto;
+}
+#photo-canvas.is-dragging {
+  cursor: grabbing;
+}
+#photo-canvas.is-dragging .photo-tile {
+  cursor: grabbing;
+}
+
+.canvas-footer {
+  position: fixed;
+  z-index: 6;
+  inset: auto 0 0;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 32px 12px max(22px, env(safe-area-inset-bottom));
+  background: linear-gradient(#f5f3ee00, #f5f3eeeb 58%, var(--canvas-bg));
+  pointer-events: none;
+}
+.canvas-hint {
+  display: none;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: var(--canvas-muted);
+  background: var(--canvas-bg);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.canvas-hint span {
+  padding: 0 6px;
+}
+.canvas-controls {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 6px;
+  border: 1px solid var(--canvas-border);
+  border-radius: 999px;
+  background: var(--canvas-control);
+  box-shadow: 0 8px 28px #2c2d2914;
+  pointer-events: auto;
+}
+.canvas-ready ~ .canvas-footer .canvas-controls {
+  display: flex;
+}
+.canvas-ready ~ .canvas-footer .canvas-hint {
+  display: block;
+}
+.canvas-controls button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--canvas-text);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 160ms ease-out;
+}
+.canvas-controls button:hover {
+  background: #eeeee8;
+}
+.canvas-controls button:active {
+  background: #e1e3d9;
+}
+.canvas-controls .playback-button {
+  min-width: 80px;
+  gap: 5px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.canvas-controls svg {
+  width: 20px;
+  height: 20px;
+}
+.control-divider {
+  height: 20px;
+  width: 1px;
+  background: var(--canvas-border);
+}
+.no-script-note {
+  margin: 0;
+  color: var(--canvas-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --tile-width: 320px;
+    --tile-height: 230px;
+    --column-gap: 64px;
+    --row-gap: 64px;
+  }
+  .site-header {
+    padding-inline: 24px;
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --tile-width: 252px;
+    --tile-height: 184px;
+    --column-gap: 36px;
+    --row-gap: 56px;
+  }
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    min-height: 88px;
+    padding-inline: 16px;
+  }
+  .welcome {
+    display: none;
+  }
+  .logout-link {
+    grid-column: 2;
+    font-size: 12px;
+    gap: 0;
+  }
+  .logout-link svg {
+    display: none;
+  }
+  #photo-canvas:not(.canvas-ready) {
+    padding: 112px 20px 120px;
+  }
+  .canvas-tiles {
+    grid-template-columns: 1fr;
+  }
+  .canvas-footer {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --tile-width: 220px;
+    --tile-height: 164px;
+    --column-gap: 28px;
+    --row-gap: 52px;
+  }
+}
+@media (forced-colors: active) {
+  .canvas-controls,
+  .photo-media {
+    border: 1px solid CanvasText;
+  }
+}

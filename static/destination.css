@@ -1,0 +1,191 @@
+:root {
+  color-scheme: light;
+  --page: #f5f3ee;
+  --surface: #ffffff;
+  --text: #2c2d29;
+  --muted: #696a63;
+  --line: #d6d7ce;
+  --accent: #3d5a36;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text);
+  background: var(--page);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  scrollbar-color: #92958b var(--page);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  min-width: 280px;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0;
+  background: var(--page);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.destination-vigan { --accent: #795833; }
+.destination-cebu { --accent: #24645c; }
+.destination-siquijor { --accent: #87613b; }
+.destination-siargao { --accent: #21606b; }
+.destination-camiguin { --accent: #245d7b; }
+
+::selection { color: var(--surface); background: var(--accent); }
+
+a { color: inherit; text-underline-offset: 0.25em; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 24px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--text);
+  clip-path: inset(50%);
+}
+.skip-link:focus { clip-path: none; }
+
+.page-header {
+  width: min(1160px, calc(100% - 64px));
+  min-height: 104px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.back-to-gallery {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration-thickness: 1px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 160ms ease-out;
+}
+.back-to-gallery:hover { text-decoration-color: currentColor; }
+.back-to-gallery svg { width: 20px; height: 20px; flex: 0 0 20px; }
+
+.page-brand { position: relative; width: 124px; height: 72px; overflow: hidden; flex: 0 0 124px; }
+.page-brand img { position: absolute; width: 192px; max-width: none; height: auto; top: -22px; left: -34px; }
+
+.destination-shell { width: min(1160px, calc(100% - 64px)); margin: 12px auto 80px; }
+
+.destination-overview {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  background: var(--surface);
+  box-shadow: 10px 16px 40px #5c513a0b;
+}
+.destination-photo { min-width: 0; overflow: hidden; background: #e5e6de; }
+.destination-hero { display: block; width: 100%; height: 100%; min-height: 460px; object-fit: cover; }
+.destination-palawan .destination-hero { object-position: 48% center; }
+.destination-cebu .destination-hero { object-position: 51% center; }
+.destination-siargao .destination-hero { object-position: 47% center; }
+.destination-story { align-self: center; padding: 42px 44px 46px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+h1 { font-size: clamp(36px, 3.8vw, 50px); font-weight: 650; line-height: 1.12; letter-spacing: -0.035em; }
+.destination-description { margin-top: 20px; color: var(--muted); }
+.attraction-story { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); }
+.attraction-story h2 { font-size: 23px; line-height: 1.25; letter-spacing: -0.025em; font-weight: 600; }
+.attraction-story p { margin-top: 12px; color: var(--muted); }
+
+.missions { display: grid; grid-template-columns: 1fr 1.45fr; gap: 64px; margin-top: 56px; }
+.missions-heading { padding-top: 7px; }
+.missions-heading h2 { font-size: 28px; line-height: 1.25; letter-spacing: -0.025em; font-weight: 650; }
+.missions-heading p { max-width: 30ch; margin-top: 12px; color: var(--muted); }
+.missions-heading .player-total { margin-top: 24px; color: var(--text); font-size: 15px; }
+.player-total strong { margin-left: 8px; font-size: 24px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.missions-content { min-width: 0; }
+.mission-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--accent); }
+.mission-list li { min-height: 99px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.mission-copy h3 { font-size: 17px; line-height: 1.4; font-weight: 600; }
+.mission-copy p { margin-top: 3px; color: var(--muted); font-size: 14px; }
+.mission-score { display: inline-flex; align-items: baseline; gap: 5px; flex-shrink: 0; color: var(--accent); font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mission-score strong { font-size: 22px; line-height: 1.3; font-weight: 650; letter-spacing: -0.025em; }
+.mission-reward { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.mission-state { color: var(--text); font-size: 12px; font-weight: 600; }
+.scanner-status { margin-top: 28px; }
+.scan-button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 13px 22px; border: 1px solid var(--text); border-radius: 10px; color: var(--surface); background: var(--text); font: 600 15px/1.5 "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif; cursor: pointer; transition: background-color 160ms ease-out; }
+.scan-button:hover { background: #41423b; }
+.scan-button:active { background: #1f201c; }
+.scan-button:disabled { color: #5e6056; background: #eeeee7; border-color: #b8baaf; cursor: wait; }
+.scan-button svg { width: 20px; height: 20px; flex: 0 0 20px; }
+.scanner-status p { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.scanner-status .claim-feedback { margin-top: 20px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; color: var(--text); background: var(--surface); font-size: 15px; overflow-wrap: anywhere; }
+.claim-feedback a { display: inline-block; min-height: 44px; padding-top: 10px; font-weight: 600; }
+.qr-scanner { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.scanner-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.scanner-heading h3 { font-size: 18px; font-weight: 600; line-height: 1.4; }
+.scanner-close, .scanner-retry { min-height: 44px; padding: 10px 16px; color: var(--text); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; font: 600 14px/1.5 "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif; cursor: pointer; }
+.scanner-close { flex-shrink: 0; }
+.scanner-close:hover, .scanner-retry:hover { background: #eeeee7; }
+.scanner-close:disabled, .scanner-retry:disabled { cursor: wait; opacity: 0.7; }
+.camera-frame { margin-top: 16px; aspect-ratio: 4 / 3; max-height: 400px; overflow: hidden; background: #e5e6de; }
+.camera-frame video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.scanner-status #camera-status { color: var(--text); font-size: 14px; }
+.scanner-retry { margin-top: 16px; }
+
+@media (max-width: 900px) {
+  .page-header, .destination-shell { width: calc(100% - 48px); }
+  .destination-story { padding: 32px; }
+  .destination-hero { min-height: 480px; }
+  .destination-story p { font-size: 15px; }
+  .attraction-story { margin-top: 28px; padding-top: 24px; }
+  .missions { grid-template-columns: 1fr 1.5fr; gap: 40px; }
+}
+
+@media (max-width: 680px) {
+  .page-header { min-height: 84px; }
+  .destination-shell { margin-top: 4px; margin-bottom: 52px; }
+  .destination-overview { grid-template-columns: 1fr; }
+  .destination-hero { height: auto; min-height: 0; aspect-ratio: 1.6; object-position: center; }
+  .destination-story { padding: 28px 28px 32px; }
+  h1 { font-size: 40px; }
+  .destination-story p { font-size: 16px; }
+  .destination-description { margin-top: 14px; }
+  .attraction-story { margin-top: 24px; padding-top: 24px; }
+  .attraction-story h2 { font-size: 22px; }
+  .missions { grid-template-columns: 1fr; gap: 24px; margin-top: 36px; }
+  .missions-heading { padding-top: 0; }
+  .missions-heading h2 { font-size: 26px; }
+  .missions-heading p { max-width: 48ch; margin-top: 10px; }
+  .scan-button { width: 100%; }
+}
+
+@media (max-width: 400px) {
+  .page-header, .destination-shell { width: calc(100% - 32px); }
+  .page-header { gap: 12px; }
+  .page-brand { width: 100px; height: 60px; flex-basis: 100px; }
+  .page-brand img { width: 156px; top: -18px; left: -28px; }
+  .back-to-gallery { gap: 7px; font-size: 13px; }
+  .destination-story { padding: 25px 24px 28px; }
+  h1 { font-size: 36px; }
+  .mission-list li { gap: 16px; }
+  .mission-copy p { max-width: 25ch; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+
+@media (forced-colors: active) {
+  .destination-overview { border: 1px solid CanvasText; }
+  .scan-button, .scanner-close, .scanner-retry, .claim-feedback { border-color: ButtonText; }
+  .scan-button:disabled { border-color: GrayText; color: GrayText; }
+  .mission-list, .mission-list li, .attraction-story { border-color: CanvasText; }
+  .mission-score { color: CanvasText; }
+}

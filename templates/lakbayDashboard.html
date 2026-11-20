@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f5f3ee">
+    <title>Explore · LakbayPass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+  </head>
+  <body>
+    <div class="canvas-brand" aria-hidden="true">
+      <img src="{{ url_for('static', filename='lakbayLogo.png') }}" alt="" width="895" height="596" draggable="false">
+    </div>
+    <header class="site-header">
+      <p class="welcome" title="Welcome, {{ username }}!">Welcome, {{ username }}!</p>
+      <a class="logout-link" href="{{ url_for('logout') }}">
+        Log out
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4H4v12h4m3-10 4 4-4 4m-4-4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </header>
+
+    <main id="photo-canvas" data-canvas tabindex="0" role="region"
+      aria-label="Infinite destination gallery" aria-describedby="canvas-instructions destination-list">
+      <h1 class="sr-only">Explore LakbayPass destinations</h1>
+      <p id="canvas-instructions" class="sr-only">Click or tap a destination to open it. Drag or swipe to explore. Tab to a destination and press Enter to open it. When the gallery is focused, use the arrow keys to move. Use Play or Pause to control automatic movement.</p>
+      <ul id="destination-list" class="sr-only">
+        {% for place in destinations %}<li>{{ place.destination }}: {{ place.attraction }}{% if not place.has_photo %}. Photo placeholder{% endif %}.</li>{% endfor %}
+      </ul>
+
+      <div id="canvas-tiles" class="canvas-tiles">
+        {% for place in destinations %}
+          <a class="photo-tile" data-destination="{{ place.slug }}"
+            href="{{ url_for('destination', slug=place.slug) }}" draggable="false"
+            aria-label="{{ place.destination }} — {{ place.attraction }}">
+          <figure>
+            <div class="photo-media{{ ' is-placeholder' if not place.has_photo else '' }}">
+              <img class="photo-image" src="{{ url_for('static', filename=place.image) }}"
+                data-fallback="{{ url_for('static', filename='destinations/photo-placeholder.svg') }}"
+                alt="{{ 'Photo placeholder for ' if not place.has_photo else '' }}{{ place.attraction }}, {{ place.destination }}"
+                width="380" height="270" draggable="false" decoding="async">
+              <span class="placeholder-label" {% if place.has_photo %}hidden{% endif %}>Photo placeholder</span>
+            </div>
+            <figcaption>
+              <span class="destination-name">{{ place.destination }}</span>
+              <span class="attraction-name">{{ place.attraction }}</span>
+            </figcaption>
+          </figure>
+          </a>
+        {% endfor %}
+      </div>
+    </main>
+
+    <footer class="canvas-footer">
+      <p id="canvas-hint" class="canvas-hint">Drag to explore <span aria-hidden="true">·</span> Use arrow keys</p>
+      <div class="canvas-controls" role="group" aria-label="Gallery controls">
+        <button class="playback-button" data-canvas-toggle type="button" aria-label="Pause automatic movement" aria-pressed="true" hidden>
+          <svg data-pause-icon viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 5h3v10H6zm5 0h3v10h-3z"/></svg>
+          <svg data-play-icon viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" hidden><path d="m7 4 9 6-9 6z"/></svg>
+          <span data-play-label>Pause</span>
+        </button>
+        <span class="control-divider" aria-hidden="true"></span>
+        {% for direction, path in [('left', 'm12 5-5 5 5 5M7 10h9'), ('up', 'm5 12 5-5 5 5M10 7v9'), ('down', 'm5 8 5 5 5-5M10 4v9'), ('right', 'm8 5 5 5-5 5M4 10h9')] %}
+          <button class="direction-button" type="button" data-direction="{{ direction }}" aria-label="Move canvas {{ direction }}" title="Move {{ direction }}" hidden>
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="{{ path }}" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        {% endfor %}
+      </div>
+      <noscript><p class="no-script-note">Enable JavaScript to drag the gallery. All six destinations are shown below.</p></noscript>
+    </footer>
+    <p id="canvas-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+  </body>
+</html>
