@@ -114,6 +114,16 @@ def import_mission_cards(connection):
         cursor.close()
 
 
+def player_total_points(connection, user_id):
+    """Read the account's awarded points; an account without claims has zero."""
+    cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cursor.execute('SELECT COALESCE(SUM(points_awarded), 0) AS total FROM point_claims WHERE user_id = %s', (user_id,))
+        return int(cursor.fetchone()['total'])
+    finally:
+        cursor.close()
+
+
 def player_progress(connection, user_id, slug):
     """Both initial render and claim responses use this database-backed state."""
     cursor = connection.cursor(MySQLdb.cursors.DictCursor)
@@ -136,7 +146,6 @@ def player_progress(connection, user_id, slug):
                 'points_awarded': row['points_awarded'] if row['claim_id'] is not None else 0,
                 'claimed_at': row['claimed_at'].isoformat() if row['claimed_at'] else None,
             })
-        cursor.execute('SELECT COALESCE(SUM(points_awarded), 0) AS total FROM point_claims WHERE user_id = %s', (user_id,))
-        return {'missions': missions, 'total_points': int(cursor.fetchone()['total'])}
+        return {'missions': missions, 'total_points': player_total_points(connection, user_id)}
     finally:
         cursor.close()

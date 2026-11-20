@@ -14,10 +14,19 @@
     </div>
     <header class="site-header">
       <p class="welcome" title="Welcome, {{ username }}!">Welcome, {{ username }}!</p>
-      <a class="logout-link" href="{{ url_for('logout') }}">
-        Log out
-        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4H4v12h4m3-10 4 4-4 4m-4-4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <div class="account-actions">
+        <p class="account-points">
+          {% if total_points is not none %}
+            <span class="sr-only">Total points: </span><strong>{{ total_points }}</strong> <span aria-hidden="true">pts</span>
+          {% else %}
+            Points unavailable
+          {% endif %}
+        </p>
+        <a class="logout-link" href="{{ url_for('logout') }}">
+          Log out
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4H4v12h4m3-10 4 4-4 4m-4-4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
     </header>
 
     <main id="photo-canvas" data-canvas tabindex="0" role="region"

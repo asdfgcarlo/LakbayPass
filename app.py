@@ -10,7 +10,7 @@ import MySQLdb.cursors
 from flask import Flask, abort, flash, jsonify, make_response, redirect, render_template, request, session, url_for
 from flask_mysqldb import MySQL
 
-from missions import AssignmentConflict, MISSION_TYPES, import_mission_cards, player_progress
+from missions import AssignmentConflict, MISSION_TYPES, import_mission_cards, player_progress, player_total_points
 
 app = Flask(__name__)
 app.config.from_mapping(
@@ -175,7 +175,17 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'loggedin' in session:
-        return render_template('lakbayDashboard.html', username=session['username'], destinations=get_destinations())
+        try:
+            total_points = player_total_points(mysql.connection, session.get('id', 0))
+        except MySQLdb.Error:
+            app.logger.exception('Could not load dashboard points')
+            total_points = None
+        response = make_response(render_template(
+            'lakbayDashboard.html', username=session['username'],
+            destinations=get_destinations(), total_points=total_points,
+        ))
+        response.headers['Cache-Control'] = 'no-store'
+        return response
     return redirect(url_for('login'))
 
 

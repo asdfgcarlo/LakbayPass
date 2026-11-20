@@ -101,6 +101,19 @@ a {
   font-weight: 700;
   line-height: 1.5;
 }
+.account-actions {
+  display: flex;
+  justify-self: end;
+  align-items: center;
+  gap: 20px;
+}
+.account-points {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 .logout-link {
   display: inline-flex;
   justify-self: end;
@@ -375,13 +388,12 @@ figcaption {
     min-height: 88px;
     padding-inline: 16px;
   }
-  .logout-link {
-    grid-column: 2;
-    font-size: 12px;
-    gap: 0;
+  .account-actions {
+    gap: 12px;
   }
-  .logout-link svg {
-    display: none;
+  .account-points,
+  .logout-link {
+    font-size: 12px;
   }
   #photo-canvas:not(.canvas-ready) {
     padding: 112px 20px 120px;

@@ -18,6 +18,9 @@ class AuthTests(unittest.TestCase):
         self.patcher = patch.object(auth, 'mysql', self.database)
         self.patcher.start()
         self.addCleanup(self.patcher.stop)
+        points_patcher = patch.object(auth, 'player_total_points', return_value=0)
+        points_patcher.start()
+        self.addCleanup(points_patcher.stop)
 
     def test_screens_and_navigation(self):
         for path in ('/', '/login', '/register'):
