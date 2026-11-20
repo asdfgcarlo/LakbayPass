@@ -91,12 +91,14 @@ a {
 }
 .welcome {
   margin: 0;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100%;
   color: var(--canvas-muted);
   font-size: 12px;
+  font-weight: 700;
   line-height: 1.5;
 }
 .logout-link {
@@ -107,6 +109,7 @@ a {
   min-height: 44px;
   padding: 0 4px;
   font-size: 13px;
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
   border-radius: 4px;
@@ -371,9 +374,6 @@ figcaption {
     gap: 8px;
     min-height: 88px;
     padding-inline: 16px;
-  }
-  .welcome {
-    display: none;
   }
   .logout-link {
     grid-column: 2;
