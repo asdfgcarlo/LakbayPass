@@ -30,7 +30,7 @@ app.config.update(
     MYSQL_USER=os.environ.get('LAKBAYPASS_MYSQL_USER', 'sql12841075'),
     MYSQL_PASSWORD=os.environ.get('LAKBAYPASS_MYSQL_PASSWORD', 'BdFpCtEVNb'),
     MYSQL_DB=os.environ.get('LAKBAYPASS_MYSQL_DB', 'sql12841075'),
-    MYSQL_DB=os.environ.get('LAKBAYPASS_PORT', 3306),
+    MYSQL_PORT=os.environ.get('LAKBAYPASS_PORT', 3306),
     SESSION_COOKIE_SAMESITE='Lax',
 )
 mysql = MySQL(app)
