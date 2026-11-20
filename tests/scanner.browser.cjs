@@ -9,6 +9,7 @@ const fixtures = require('./fixtures/mission-qr.json');
 const root = path.resolve(__dirname, '..');
 const python = path.join(root, 'venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
 const server = spawn(python, ['tests/mission_browser_server.py'], { cwd: root, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true });
+const serverExit = new Promise(resolve => server.once('exit', resolve));
 let serverErrors = '';
 server.stderr.on('data', data => { serverErrors += data; });
 
@@ -121,6 +122,7 @@ async function noOverflow(page) {
     assert.match(await page.locator('#claim-feedback').innerText(), /Local Foods claimed.*15 points/);
     assert.equal(await page.locator('[data-mission-type="local_foods"] .mission-state').isVisible(), true);
     assert.equal(await page.locator('#player-total').innerText(), '15');
+    assert.equal(await page.locator('[data-current-points]').textContent(), '15');
     await scan(page, 'LP-QG99QBYR', 'already_claimed');
     assert.match(await page.locator('#claim-feedback').innerText(), /already claimed.*No additional points/);
     assert.equal(await page.locator('#player-total').innerText(), '15');
@@ -192,6 +194,7 @@ async function noOverflow(page) {
     await phone.locator('#open-scanner').tap();
     await phone.waitForFunction(() => document.querySelector('#scanner-root').dataset.claimStatus === 'claimed');
     assert.equal(await phone.locator('#player-total').innerText(), '15');
+    assert.equal(await phone.locator('[data-current-points]').textContent(), '15');
     await stopped(phone);
     await noOverflow(phone);
     await phone.screenshot({ path: path.join(review, 'scanner-claimed-phone.png'), fullPage: true });
@@ -213,8 +216,8 @@ async function noOverflow(page) {
     console.log('PASS: real QR pixel decoding and MySQL claims; all six scanner buttons; rear-camera preference; Cebu food +15, repeat +0 and second-account +15; unknown/wrong destination; saved reload; network and camera failures; late permission, Close, Escape, pagehide/visibility cleanup; 320/390/768/1440 layouts.');
   } finally {
     if (browser) await browser.close();
-    server.stdin.end('stop\n');
-    await new Promise(resolve => server.once('exit', resolve));
+    if (server.exitCode === null) server.stdin.end('stop\n');
+    await serverExit;
     if (server.exitCode !== 0) console.error(serverErrors);
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });

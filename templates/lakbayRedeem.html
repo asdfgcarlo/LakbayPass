@@ -1,0 +1,88 @@
+{% from 'components/account_menu.html' import account_menu with context %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f5f3ee">
+    <title>Redeem points · LakbayPass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='destination.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='redeem.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+    <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='redeem.js') }}" defer></script>
+  </head>
+  <body class="redeem-page">
+    <a class="skip-link" href="#redeem-content">Skip to rewards</a>
+    <header class="page-header">
+      <a class="back-to-gallery" href="{{ url_for('dashboard') }}">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 10H4m5-5-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to gallery
+      </a>
+      <nav class="reward-navigation desktop-account" aria-label="Account">
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
+      </nav>
+      {{ account_menu(overview.balance if overview else none) }}
+    </header>
+    <main id="redeem-content" class="redeem-shell">
+      <div class="redeem-heading">
+        <div><h1>Redeem your points</h1><p>Choose how to use your mission points.</p></div>
+        {% if overview is not none %}
+        <p class="reward-balance">Available points <strong id="reward-balance">{{ overview.balance }}</strong><span>{{ overview.earned }} points earned overall</span></p>
+        {% endif %}
+      </div>
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+      <p class="reward-notice {{ category }}" role="status">{{ message }}</p>
+      {% endfor %}
+      {% if overview is not none %}
+      <section class="reward-grid" aria-label="Available rewards">
+        {% for reward in rewards %}
+        <article class="reward-card" data-reward="{{ reward.code }}">
+          <div class="reward-visual" aria-hidden="true">
+            {% if reward.code == 'ecert' %}
+            <svg viewBox="0 0 80 80" fill="none"><rect x="12" y="15" width="56" height="42" rx="3"/><path d="M23 27h34M23 36h22M23 45h12M48 60l-2 11 8-4 8 4-2-11"/><circle cx="54" cy="52" r="10"/><path d="m49 52 3 3 6-6"/></svg>
+            {% elif reward.code == 'card_game_discount' %}
+            <span class="discount-mark">20<span>%</span></span>
+            {% else %}
+            <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="20" r="12"/><path d="M40 32v10M35 38h10"/><rect x="24" y="42" width="32" height="28" rx="5"/><path d="m32 57 6 6 11-12"/></svg>
+            {% endif %}
+          </div>
+          <div class="reward-details">
+            <h2>{{ reward.name }}</h2>
+            <p class="reward-description">{{ reward.description }}</p>
+            <p class="reward-price"><strong>{{ reward.cost }}</strong> points</p>
+            <form class="redeem-form" method="post" action="{{ url_for('redeem') }}">
+              <input type="hidden" name="csrf_token" value="{{ session.redeem_csrf }}">
+              <input type="hidden" name="reward" value="{{ reward.code }}">
+              <input type="hidden" name="request_key" value="{{ request_keys[reward.code] }}">
+              <button class="reward-button" type="submit" {% if overview.balance < reward.cost %}disabled{% endif %}>
+                {% if overview.balance >= reward.cost %}Redeem for {{ reward.cost }} pts{% else %}Need {{ reward.cost - overview.balance }} more {{ 'pt' if reward.cost - overview.balance == 1 else 'pts' }}{% endif %}
+              </button>
+            </form>
+          </div>
+        </article>
+        {% endfor %}
+      </section>
+      <p class="rewards-explainer">Redeeming reduces your available points. Your tier and completed missions stay based on all points earned.</p>
+      <section class="redemption-history" id="redemption-history" aria-labelledby="history-title">
+        <h2 id="history-title">Your redemptions</h2>
+        <p>Reward requests are saved here with a reference for fulfillment.</p>
+        {% if overview.history %}
+        <ul class="redemption-list" role="list">
+          {% for item in overview.history %}
+          <li>
+            <div><strong>{{ item.reward_name }}</strong><span class="redemption-reference">Reference: {{ item.reference }}</span></div>
+            <div class="redemption-status"><strong>−{{ item.points_spent }} pts</strong><span>{{ 'Requested' if item.status == 'requested' else item.status|capitalize }}</span></div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}<p class="history-empty">You haven't redeemed a reward yet. Complete missions to earn your first reward.</p>{% endif %}
+      </section>
+      {% else %}
+      <p class="reward-notice error" role="alert">{{ error }}</p>
+      <a class="reward-retry" href="{{ url_for('redeem') }}">View rewards and history</a>
+      {% endif %}
+    </main>
+  </body>
+</html>

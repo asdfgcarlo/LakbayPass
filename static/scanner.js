@@ -50,6 +50,9 @@
   function applyProgress(progress) {
     if (Number.isSafeInteger(progress.total_points)) {
       document.querySelector('#player-total').textContent = String(progress.total_points);
+      document.querySelectorAll('[data-current-points]').forEach(total => {
+        total.textContent = String(progress.total_points);
+      });
     }
     if (!Array.isArray(progress.missions)) return;
     for (const mission of progress.missions) {

@@ -10,7 +10,9 @@ import MySQLdb.cursors
 from flask import Flask, abort, flash, jsonify, make_response, redirect, render_template, request, session, url_for
 from flask_mysqldb import MySQL
 
-from missions import AssignmentConflict, MISSION_TYPES, import_mission_cards, player_progress, player_total_points
+from administration import admin_account, admin_overview, install_user_roles, setup_admin_account
+from missions import AssignmentConflict, MISSION_TYPES, import_mission_cards, player_profile, player_progress, player_total_points
+from rewards import REWARDS, RedemptionError, redeem_reward, reward_overview
 
 app = Flask(__name__)
 app.config.from_mapping(
@@ -45,14 +47,6 @@ if not app.secret_key:
     except FileExistsError:
         pass
     app.secret_key = key_file.read_text(encoding='utf-8').strip()
-app.config.update(
-    MYSQL_HOST=os.environ.get('LAKBAYPASS_MYSQL_HOST', 'sql12.freesqldatabase.com'),
-    MYSQL_USER=os.environ.get('LAKBAYPASS_MYSQL_USER', 'sql12841075'),
-    MYSQL_PASSWORD=os.environ.get('LAKBAYPASS_MYSQL_PASSWORD', 'BdFpCtEVNb'),
-    MYSQL_DB=os.environ.get('LAKBAYPASS_MYSQL_DB', 'sql12841075'),
-    MYSQL_PORT=os.environ.get('LAKBAYPASS_PORT', 3306),
-    SESSION_COOKIE_SAMESITE='Lax',
-)
 mysql = MySQL(app)
 
 
@@ -61,9 +55,22 @@ def import_cards_command():
     """Install mission tables and import the 18 exact QR assignments safely."""
     try:
         added = import_mission_cards(mysql.connection)
+        install_user_roles(mysql.connection)
     except (AssignmentConflict, MySQLdb.Error) as error:
         raise click.ClickException(f'Import stopped; existing cards and claims were preserved.\n{error}') from error
     click.echo(f'Mission cards ready: {added} added, {18 - added} unchanged. No QR assignment conflicts.')
+
+
+@app.cli.command('setup-admin')
+@click.option('--email', default='admin@lakbay.pass', show_default=True)
+@click.option('--password', default='admin@lakbay.pass', hide_input=True)
+def setup_admin_command(email, password):
+    """Install roles and save the designated admin account (rerunnable)."""
+    try:
+        setup_admin_account(mysql.connection, email, password)
+    except MySQLdb.Error as error:
+        raise click.ClickException(f'Admin setup failed.\n{error}') from error
+    click.echo(f'Admin account ready: {email}. Existing users and points were preserved.')
 
 # Drop the matching photo into static/destinations to replace its placeholder.
 DESTINATIONS = (
@@ -129,7 +136,7 @@ def register():
                 else:
                     try:
                         cursor.execute(
-                            'INSERT INTO users (username, email, password) VALUES (%s, %s, %s)',
+                            "INSERT INTO users (username, email, password, role) VALUES (%s, %s, %s, 'user')",
                             (values['username'], values['email'], hashed_password),
                         )
                         mysql.connection.commit()
@@ -164,12 +171,45 @@ def login():
             finally:
                 cursor.close()
             if account:
+                session.clear()
                 session['loggedin'] = True
                 session['id'] = account['id']
                 session['username'] = account['username']
-                return redirect(url_for('dashboard'))
+                session['role'] = account.get('role', 'user')
+                return redirect(url_for('admin' if session['role'] == 'admin' else 'dashboard'))
             errors['password'] = 'We couldn’t log you in. Check your email and password.'
     return render_template('lakbayLogin.html', values=values, errors=errors)
+
+
+@app.get('/admin')
+def admin():
+    player_id = claim_player_id()
+    if player_id is None:
+        return redirect(url_for('login'))
+    try:
+        account = admin_account(mysql.connection, player_id)
+        if account is None:
+            session.clear()
+            return redirect(url_for('login'))
+        session['role'] = account['role']
+        if account['role'] != 'admin':
+            response = make_response(render_template(
+                'lakbayAdmin.html', overview=None,
+                error='This page is only available to administrators.', forbidden=True,
+            ), 403)
+        else:
+            response = make_response(render_template(
+                'lakbayAdmin.html', overview=admin_overview(mysql.connection),
+                admin_username=account['username'],
+            ))
+    except MySQLdb.Error:
+        app.logger.exception('Could not load admin dashboard')
+        response = make_response(render_template(
+            'lakbayAdmin.html', overview=None,
+            error='The admin dashboard could not be loaded. Please try again.',
+        ), 503)
+    response.headers['Cache-Control'] = 'no-store'
+    return response
 
 
 @app.route('/dashboard')
@@ -187,6 +227,87 @@ def dashboard():
         response.headers['Cache-Control'] = 'no-store'
         return response
     return redirect(url_for('login'))
+
+
+@app.get('/profile')
+def profile():
+    player_id = claim_player_id()
+    if player_id is None:
+        return redirect(url_for('login'))
+    try:
+        progress = player_profile(mysql.connection, player_id)
+    except MySQLdb.Error:
+        app.logger.exception('Could not load player profile')
+        response = make_response(render_template('lakbayProfile.html', profile=None), 503)
+    else:
+        if progress is None:
+            session.clear()
+            return redirect(url_for('login'))
+        destinations = get_destinations()
+        for place in destinations:
+            place.update(progress['destinations'][place['slug']])
+        response = make_response(render_template(
+            'lakbayProfile.html', profile=progress, destinations=destinations,
+        ))
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
+@app.route('/redeem', methods=['GET', 'POST'])
+def redeem():
+    player_id = claim_player_id()
+    if player_id is None:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        csrf = session.get('redeem_csrf', '')
+        supplied = request.form.get('csrf_token', '')
+        if not csrf or not secrets.compare_digest(csrf.encode(), supplied.encode()):
+            return redeem_error('Your redemption session expired. Refresh the page and try again.', 403)
+        reward_code = request.form.get('reward', '')
+        request_key = request.form.get('request_key', '')
+        try:
+            result = redeem_reward(mysql.connection, player_id, reward_code, request_key)
+        except RedemptionError as error:
+            if error.status == 'login_required':
+                session.clear()
+                return redirect(url_for('login'))
+            flash(str(error), 'error')
+        except MySQLdb.Error:
+            app.logger.exception('Could not confirm reward redemption')
+            return redeem_error('Your redemption could not be confirmed. Check your redemption history before trying again.', 503)
+        else:
+            pending = dict(session.get('redeem_requests', {}))
+            if pending.get(reward_code) == request_key:
+                pending.pop(reward_code)
+            session['redeem_requests'] = pending
+            if result['already_redeemed']:
+                flash(f'This redemption was already recorded. No additional points were deducted. Reference: {result["reference"]}.', 'success')
+            else:
+                flash(f'{result["reward_name"]}: redemption recorded. {result["points_spent"]} points deducted. Reference: {result["reference"]}.', 'success')
+        return redirect(url_for('redeem'), code=303)
+    try:
+        overview = reward_overview(mysql.connection, player_id)
+    except MySQLdb.Error:
+        app.logger.exception('Could not load rewards')
+        return redeem_error('Rewards are temporarily unavailable. Please try again.', 503)
+    if overview is None:
+        session.clear()
+        return redirect(url_for('login'))
+    session.setdefault('redeem_csrf', secrets.token_urlsafe(32))
+    pending = dict(session.get('redeem_requests', {}))
+    for reward in REWARDS:
+        pending.setdefault(reward['code'], secrets.token_hex(16))
+    session['redeem_requests'] = pending
+    response = make_response(render_template('lakbayRedeem.html', overview=overview,
+                             rewards=REWARDS, request_keys=pending))
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
+
+def redeem_error(message, status):
+    response = make_response(render_template('lakbayRedeem.html', overview=None, error=message), status)
+    response.headers['Cache-Control'] = 'no-store'
+    return response
 
 
 @app.route('/destinations/<slug>')

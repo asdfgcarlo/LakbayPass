@@ -5,9 +5,9 @@ import MySQLdb.cursors
 
 
 MISSION_TYPES = {
-    'itinerary': ('Itinerary', 10, 'Plan the places you want to explore.'),
-    'local_foods': ('Local Foods', 15, 'Discover the flavors of the destination.'),
-    'activities': ('Activities', 20, 'Make time for a new experience.'),
+    'itinerary': ('Itinerary', 10, 'Explore the destination.'),
+    'local_foods': ('Local Foods', 15, 'Discover the delicacies of the destination.'),
+    'activities': ('Activities', 20, 'Try activities for new experience.'),
 }
 QR_ASSIGNMENTS = {
     'palawan': ('LP-T5V5BWZM', 'LP-BALJDMK4', 'LP-KT2QEJGK'),
@@ -114,14 +114,74 @@ def import_mission_cards(connection):
         cursor.close()
 
 
-def player_total_points(connection, user_id):
-    """Read the account's awarded points; an account without claims has zero."""
+def player_earned_points(connection, user_id):
+    """Lifetime earned points determine mission progress and the player's tier."""
     cursor = connection.cursor(MySQLdb.cursors.DictCursor)
     try:
         cursor.execute('SELECT COALESCE(SUM(points_awarded), 0) AS total FROM point_claims WHERE user_id = %s', (user_id,))
         return int(cursor.fetchone()['total'])
     finally:
         cursor.close()
+
+
+def player_total_points(connection, user_id):
+    """Spendable balance: awarded mission points minus saved redemptions."""
+    cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cursor.execute(
+            # MySQL 5.5 can coerce negative UNION rows to unsigned values and
+            # ignore the spending. Aggregate independently, then subtract two
+            # explicitly signed totals on every supported server version.
+            'SELECT CAST((SELECT COALESCE(SUM(points_awarded), 0) '
+            'FROM point_claims WHERE user_id = %s) AS SIGNED) '
+            '- CAST((SELECT COALESCE(SUM(points_spent), 0) '
+            'FROM reward_redemptions WHERE user_id = %s) AS SIGNED) AS total',
+            (user_id, user_id),
+        )
+        return int(cursor.fetchone()['total'])
+    finally:
+        cursor.close()
+
+
+def player_tier(points):
+    if points <= 90:
+        return 'Bronze'
+    if points <= 180:
+        return 'Silver'
+    return 'Gold'
+
+
+def player_profile(connection, user_id):
+    """Read one user's identity and claims without changing their progress."""
+    cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        cursor.execute('SELECT username FROM users WHERE id = %s', (user_id,))
+        account = cursor.fetchone()
+        if account is None:
+            return None
+        cursor.execute(
+            'SELECT c.destination_slug, c.mission_type, p.id AS claim_id '
+            'FROM mission_cards c LEFT JOIN point_claims p '
+            'ON p.mission_card_id = c.id AND p.user_id = %s', (user_id,),
+        )
+        claimed = {(row['destination_slug'], row['mission_type'])
+                   for row in cursor.fetchall() if row['claim_id'] is not None}
+    finally:
+        cursor.close()
+    destinations = {}
+    for slug in QR_ASSIGNMENTS:
+        missions = [dict(mission_type=kind, name=details[0], claimed=(slug, kind) in claimed)
+                    for kind, details in MISSION_TYPES.items()]
+        destinations[slug] = dict(missions=missions, claimed_count=sum(item['claimed'] for item in missions))
+    total = player_earned_points(connection, user_id)
+    return dict(
+        username=account['username'], total_points=total,
+        available_points=player_total_points(connection, user_id),
+        max_points=sum(card['points'] for card in expected_cards()),
+        tier=player_tier(total), destinations=destinations,
+        visited_count=sum(place['claimed_count'] > 0 for place in destinations.values()),
+        claimed_count=sum(place['claimed_count'] for place in destinations.values()),
+    )
 
 
 def player_progress(connection, user_id, slug):

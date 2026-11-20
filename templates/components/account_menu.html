@@ -1,0 +1,17 @@
+{% macro account_menu(points) %}
+<details class="mobile-account-menu" data-account-menu>
+  <summary aria-label="Account menu" aria-controls="account-menu-panel">
+    <svg class="menu-open-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <svg class="menu-close-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </summary>
+  <nav class="account-menu-panel" id="account-menu-panel" aria-label="Account">
+    <a href="{{ url_for('profile') }}"{% if request.endpoint == 'profile' %} aria-current="page"{% endif %}>Profile</a>
+    <p class="menu-points"><span>Current Points</span><span><strong data-current-points>{{ points if points is not none else 'Unavailable' }}</strong>{% if points is not none %} pts{% endif %}</span></p>
+    <a href="{{ url_for('redeem') }}"{% if request.endpoint == 'redeem' %} aria-current="page"{% endif %}>Redeem Points</a>
+    {% if session.get('role') == 'admin' %}<a href="{{ url_for('admin') }}"{% if request.endpoint == 'admin' %} aria-current="page"{% endif %}>Admin Dashboard</a>{% endif %}
+    <a class="menu-logout" href="{{ url_for('logout') }}">Log Out
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4H4v12h4m3-10 4 4-4 4m-4-4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </nav>
+</details>
+{% endmacro %}

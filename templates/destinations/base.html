@@ -1,12 +1,15 @@
+{% from 'components/account_menu.html' import account_menu with context %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#f5f3ee">
     <meta name="description" content="Explore {{ place.destination }}, discover {{ place.attraction }}, and view your LakbayPass missions.">
     <title>{{ place.destination }} · {{ place.attraction }} · LakbayPass</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='destination.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+    <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
     <script src="{{ url_for('static', filename='vendor/jsQR-1.4.0.js') }}" defer></script>
     <script src="{{ url_for('static', filename='scanner.js') }}" defer></script>
   </head>
@@ -19,8 +22,11 @@
         </svg>
         <span>Back to gallery</span>
       </a>
-      <div class="page-brand">
-        <img src="{{ url_for('static', filename='lakbayLogo.png') }}" alt="LakbayPass" width="895" height="596">
+      <div class="header-account">
+        <div class="page-brand">
+          <img src="{{ url_for('static', filename='lakbayLogo.png') }}" alt="LakbayPass" width="895" height="596">
+        </div>
+        {{ account_menu(progress.total_points) }}
       </div>
     </header>
 

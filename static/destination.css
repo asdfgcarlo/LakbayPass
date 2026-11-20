@@ -11,6 +11,7 @@
   background: var(--page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
   scrollbar-color: #92958b var(--page);
 }
 
@@ -22,6 +23,7 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   margin: 0;
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
   background: var(--page);
   font-size: 16px;
   line-height: 1.6;
@@ -61,9 +63,11 @@ a:focus-visible, button:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  padding-top: env(safe-area-inset-top);
 }
 
 .back-to-gallery {
+  min-width: 0;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -85,7 +89,7 @@ a:focus-visible, button:focus-visible {
 
 .destination-overview {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   background: var(--surface);
   box-shadow: 10px 16px 40px #5c513a0b;
 }
@@ -94,7 +98,7 @@ a:focus-visible, button:focus-visible {
 .destination-palawan .destination-hero { object-position: 48% center; }
 .destination-cebu .destination-hero { object-position: 51% center; }
 .destination-siargao .destination-hero { object-position: 47% center; }
-.destination-story { align-self: center; padding: 42px 44px 46px; }
+.destination-story { align-self: center; min-width: 0; padding: 42px 44px 46px; overflow-wrap: anywhere; }
 h1, h2, h3, p { margin: 0; }
 h1, h2, h3 { text-wrap: balance; }
 h1 { font-size: clamp(36px, 3.8vw, 50px); font-weight: 650; line-height: 1.12; letter-spacing: -0.035em; }
@@ -103,7 +107,8 @@ h1 { font-size: clamp(36px, 3.8vw, 50px); font-weight: 650; line-height: 1.12; l
 .attraction-story h2 { font-size: 23px; line-height: 1.25; letter-spacing: -0.025em; font-weight: 600; }
 .attraction-story p { margin-top: 12px; color: var(--muted); }
 
-.missions { display: grid; grid-template-columns: 1fr 1.45fr; gap: 64px; margin-top: 56px; }
+.missions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); gap: 64px; margin-top: 56px; }
+.mission-copy { min-width: 0; overflow-wrap: anywhere; }
 .missions-heading { padding-top: 7px; }
 .missions-heading h2 { font-size: 28px; line-height: 1.25; letter-spacing: -0.025em; font-weight: 650; }
 .missions-heading p { max-width: 30ch; margin-top: 12px; color: var(--muted); }
@@ -142,10 +147,11 @@ h1 { font-size: clamp(36px, 3.8vw, 50px); font-weight: 650; line-height: 1.12; l
 @media (max-width: 900px) {
   .page-header, .destination-shell { width: calc(100% - 48px); }
   .destination-story { padding: 32px; }
-  .destination-hero { min-height: 480px; }
+  .destination-overview { grid-template-columns: 1fr; }
+  .destination-hero { height: auto; min-height: 0; aspect-ratio: 2; }
   .destination-story p { font-size: 15px; }
   .attraction-story { margin-top: 28px; padding-top: 24px; }
-  .missions { grid-template-columns: 1fr 1.5fr; gap: 40px; }
+  .missions { grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 40px; }
 }
 
 @media (max-width: 680px) {

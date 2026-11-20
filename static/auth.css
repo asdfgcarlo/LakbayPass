@@ -26,9 +26,9 @@ button, a, input { -webkit-tap-highlight-color: #deded5; }
   min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: 48px 24px;
+  padding: max(48px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
 }
-.auth-shell { width: 100%; max-width: 448px; }
+.auth-shell { width: 100%; min-width: 0; max-width: 448px; }
 .brand {
   display: block;
   width: 280px;
@@ -61,7 +61,8 @@ h1 {
   text-wrap: balance;
 }
 .card-heading p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
-.auth-form { display: grid; gap: 20px; }
+.auth-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.field { min-width: 0; }
 .field label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; line-height: 1.5; }
 .input-control, .password-control { position: relative; }
 input {
@@ -136,14 +137,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--text); outline-
 .auth-switch a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; text-decoration-thickness: 1px; }
 .auth-switch a:hover { text-decoration-thickness: 2px; }
 @media (max-width: 480px) {
-  .auth-page { padding: 28px 16px; }
+  .auth-page { padding: max(28px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
   .brand { margin-bottom: 22px; }
   .auth-card { padding: 28px 24px 20px; }
   h1 { font-size: 26px; }
   .card-heading { margin-bottom: 26px; }
 }
 @media (max-width: 350px) {
-  .auth-page { padding-inline: 12px; }
+  .auth-page { padding-inline: max(12px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-right)); }
   .auth-card { padding-inline: 20px; }
   h1 { font-size: 24px; }
 }

@@ -14,6 +14,7 @@
   const roundUp = (value, multiple) => Math.ceil(value / multiple) * multiple;
 
   let autoplay = !motionPreference.matches;
+  let accountMenuOpen = false;
   let activePointer = null;
   let lastPointerX = 0;
   let lastPointerY = 0;
@@ -109,14 +110,14 @@
   }
 
   function requestFrame() {
-    if (frameId || !canRender() || (!needsRender && !(autoplay && !dragging && !focusedTile))) return;
+    if (frameId || !canRender() || (!needsRender && !(autoplay && !dragging && !focusedTile && !accountMenuOpen))) return;
     frameId = window.requestAnimationFrame(animate);
   }
 
   function animate(timestamp) {
     frameId = 0;
     if (!canRender()) { lastTimestamp = null; return; }
-    const moving = autoplay && !dragging && !focusedTile;
+    const moving = autoplay && !dragging && !focusedTile && !accountMenuOpen;
     if (moving && lastTimestamp !== null) {
       // A suspended tab or stalled frame must never jump on return.
       const elapsed = Math.min(Math.max((timestamp - lastTimestamp) / 1000, 0), 0.05);
@@ -303,6 +304,11 @@
     announce(`Moved canvas ${direction}.`);
     requestFrame();
   }
+  document.addEventListener('lakbay:account-menu', event => {
+    accountMenuOpen = event.detail.open;
+    lastTimestamp = null;
+    requestFrame();
+  });
   toggle.addEventListener('click', () => setAutoplay(!autoplay, true));
   directions.forEach(button => button.addEventListener('click', () => moveCanvas(button.dataset.direction)));
   const arrowDirections = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down' };

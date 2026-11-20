@@ -1,0 +1,96 @@
+{% from 'components/account_menu.html' import account_menu with context %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#f5f3ee">
+    <title>Your profile · LakbayPass</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='destination.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+    <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
+  </head>
+  <body class="profile-page{% if profile %} tier-{{ profile.tier|lower }}{% endif %}">
+    <a class="skip-link" href="#profile-content">Skip to profile</a>
+    <header class="page-header">
+      <a class="back-to-gallery" href="{{ url_for('dashboard') }}">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 10H4m5-5-5 5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Back to gallery</span>
+      </a>
+      <a class="profile-logout desktop-account" href="{{ url_for('logout') }}">
+        Log out
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4H4v12h4m3-10 4 4-4 4m-4-4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      {{ account_menu(profile.available_points if profile else none) }}
+    </header>
+
+    <main id="profile-content" class="profile-shell">
+      {% if profile %}
+      <section class="profile-overview" aria-labelledby="profile-title">
+        <div class="profile-identity">
+          <h1 id="profile-title">Your profile</h1>
+          <p class="profile-username">{{ profile.username }}</p>
+          <p class="tier-badge">{{ profile.tier }} tier</p>
+          <p class="profile-intro">Your places, missions, and points in one place.</p>
+        </div>
+        <div class="profile-summary">
+          <div class="points-heading">
+            <label for="profile-progress">Claimed points</label>
+            <p class="points-value"><strong id="profile-points">{{ profile.total_points }}</strong><span> / {{ profile.max_points }}</span></p>
+          </div>
+          <progress id="profile-progress" value="{{ profile.total_points }}" max="{{ profile.max_points }}">{{ profile.total_points }} of {{ profile.max_points }} points</progress>
+          <ol class="tier-guide" aria-label="Tier ranges">
+            {% for name, points in [('Bronze', '0–90'), ('Silver', '91–180'), ('Gold', '181–270')] %}
+            <li{% if profile.tier == name %} aria-current="step"{% endif %}><strong>{{ name }}</strong><span>{{ points }} pts</span></li>
+            {% endfor %}
+          </ol>
+          <p class="profile-balance">Available to redeem: <strong>{{ profile.available_points }} pts</strong></p>
+          <a class="profile-redeem" href="{{ url_for('redeem') }}">Redeem Point</a>
+          <p class="profile-balance-note">Your tier is based on all points earned.</p>
+        </div>
+      </section>
+
+      <section class="profile-destinations" aria-labelledby="places-title">
+        <div class="places-heading">
+          <h2 id="places-title">Your destinations</h2>
+          <p>{{ profile.visited_count }} of {{ destinations|length }} places visited · {{ profile.claimed_count }} of 18 missions claimed</p>
+        </div>
+        {% if profile.visited_count == 0 %}
+        <p class="profile-empty">No places visited yet. Open a destination and scan your first mission card to get started.</p>
+        {% endif %}
+        <ul class="destination-progress-list" role="list">
+          {% for place in destinations %}
+          <li class="destination-progress" data-destination="{{ place.slug }}">
+            <div class="place-heading">
+              <a class="place-link" href="{{ url_for('destination', slug=place.slug) }}">
+                <img src="{{ url_for('static', filename=place.image) }}" alt="" width="84" height="64" loading="lazy" decoding="async">
+                <span><strong>{{ place.destination }}</strong><span class="place-attraction">{{ place.attraction }}</span></span>
+              </a>
+              <p class="place-progress"><strong>{{ place.claimed_count }}/3</strong><span>Missions Claimed</span></p>
+            </div>
+            <ul class="mission-checklist" aria-label="{{ place.destination }} mission status">
+              {% for mission in place.missions %}
+              <li class="{% if mission.claimed %}is-claimed{% endif %}" data-mission-type="{{ mission.mission_type }}">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  {% if mission.claimed %}<path d="m4 10 4 4 8-8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>{% else %}<circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.4"/>{% endif %}
+                </svg>
+                <span><strong>{{ mission.name }}</strong><span class="mission-label">{{ 'Claimed' if mission.claimed else 'Not claimed' }}</span></span>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+      <a class="profile-explore" href="{{ url_for('dashboard') }}">Explore destinations</a>
+      {% else %}
+      <section class="profile-error" aria-labelledby="profile-title">
+        <h1 id="profile-title">Your profile</h1>
+        <p>Your progress could not be loaded. Please try again.</p>
+        <a class="profile-explore" href="{{ url_for('profile') }}">Try again</a>
+      </section>
+      {% endif %}
+    </main>
+  </body>
+</html>

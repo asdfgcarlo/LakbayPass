@@ -1,3 +1,4 @@
+{% from 'components/account_menu.html' import account_menu with context %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -6,6 +7,8 @@
     <meta name="theme-color" content="#f5f3ee">
     <title>Explore · LakbayPass</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
+    <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
     <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
   </head>
   <body>
@@ -13,8 +16,8 @@
       <img src="{{ url_for('static', filename='lakbayLogo.png') }}" alt="" width="895" height="596" draggable="false">
     </div>
     <header class="site-header">
-      <p class="welcome" title="Welcome, {{ username }}!">Welcome, {{ username }}!</p>
-      <div class="account-actions">
+      <a class="welcome" href="{{ url_for('admin' if session.get('role') == 'admin' else 'profile') }}" title="{{ 'View admin dashboard' if session.get('role') == 'admin' else 'View your profile' }}">Welcome, {{ username }}!</a>
+      <div class="account-actions desktop-account">
         <p class="account-points">
           {% if total_points is not none %}
             <span class="sr-only">Total points: </span><strong>{{ total_points }}</strong> <span aria-hidden="true">pts</span>
@@ -22,11 +25,13 @@
             Points unavailable
           {% endif %}
         </p>
+        <a class="redeem-link" href="{{ url_for('redeem') }}">Redeem Point</a>
         <a class="logout-link" href="{{ url_for('logout') }}">
           Log out
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 4H4v12h4m3-10 4 4-4 4m-4-4h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
+      {{ account_menu(total_points) }}
     </header>
 
     <main id="photo-canvas" data-canvas tabindex="0" role="region"

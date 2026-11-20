@@ -39,8 +39,59 @@ if an existing database contains duplicate claims.
 `(destination_slug, mission_type)` slot. `point_claims` records `user_id`,
 `mission_card_id`, `points_awarded`, and `claimed_at` (database timestamp).
 The unique `(user_id, mission_card_id)` index is the concurrency guarantee.
-Foreign keys preserve referenced cards/users. Point totals are always
-`SUM(point_claims.points_awarded)`, with zero for a new player.
+Foreign keys preserve referenced cards/users. Lifetime earned points are
+`SUM(point_claims.points_awarded)`, with zero for a new player. Available points
+subtract `SUM(reward_redemptions.points_spent)`. Redemption never changes or
+deletes mission claims. Profile tiers and mission progress use lifetime earned
+points; dashboard totals, mission API totals, and reward eligibility use the
+remaining available balance.
+
+Earned and spent totals are summed separately and cast to signed values before
+subtraction. This also supports the hosted MySQL 5.5 server, where combining
+unsigned awards with negative spending in a `UNION` can omit the deductions.
+
+## Admin accounts
+
+The `users.role` column is `user` or `admin`, defaulting to `user`. Public
+registration always creates a regular user; a submitted role is ignored.
+The import command adds this column to existing installations. To create the
+designated admin and set its password, run after importing the schema:
+
+```powershell
+.\venv\Scripts\python.exe -m flask --app app setup-admin
+```
+
+The default email and password are both `admin@lakbay.pass`, as requested.
+The password is stored in the same hashed format as existing accounts. The
+command is rerunnable: it updates only the designated account's password and
+role, preserving existing users, claims, and redemptions. Optional `--email` and
+`--password` arguments select different credentials.
+
+Admin login opens `/admin` (`templates/lakbayAdmin.html`). Every request checks
+the saved database role; regular users receive 403. The page lists all accounts
+(including admins), their available and lifetime earned points, and all reward
+requests with their user, reference, cost, status, and server timestamp. It is
+read-only and uses `Cache-Control: no-store`.
+
+## Rewards and redemption
+
+The same import command above adds the `reward_redemptions` table to an
+existing database. Run it before starting an updated checkout. The three offers
+are defined in `rewards.py`: eCert (90), 20% Discount for the New Card Game
+(180), and Physical Keychain (270 points).
+
+The protected `/redeem` page uses normal POST forms with a session CSRF token.
+Prices and user identity come from the server. A transaction locks the user's
+row before checking the current balance and recording the charge. A unique
+`(user_id, request_key)` prevents a retried form or double click from charging
+again. Separate purchases are allowed when the account has enough points.
+Refreshing a page preserves pending request keys until a successful response.
+
+Each record stores the reward name and cost at redemption time, a unique
+reference, and `requested` status. The page shows the current user's saved
+requests. Certificate delivery, discount activation, and keychain fulfillment
+are handled separately; no certificate file, usable discount code, email, or
+shipment is automatically issued by this feature.
 
 ## HTTP flow
 
@@ -80,6 +131,20 @@ Run the database-independent Python tests first:
 .\venv\Scripts\python.exe -m unittest discover -s tests
 ```
 
+The responsive browser suite uses synthetic local fixtures and never connects
+to MySQL. With Playwright installed (or `PLAYWRIGHT_MODULE` pointing to its
+package), run:
+
+```powershell
+node tests/responsive.browser.cjs
+```
+
+It checks all 12 pages at phone, tablet, landscape, and desktop widths, the
+mobile menu, keyboard/touch navigation, current-point refresh, gallery playback,
+long identities, zero/error states, and native navigation without JavaScript.
+The fixture server and browser stop when the suite finishes. These are Chrome
+emulation checks; physical phones and Safari are separate hardware/browser checks.
+
 The hosted account may only have access to its supplied database. Run the MySQL
 integration and scanner browser suites against a separate development MySQL
 server/account with `CREATE DATABASE` permission, using the environment
@@ -101,6 +166,19 @@ database and two test accounts inside it, then remove that test database. They
 require CREATE DATABASE permission and never add claims to the app database.
 The other Python tests mock database reads. The gallery browser regressions
 read the installed mission table but do not write claims.
+
+To check balance deductions and simultaneous redemptions on the configured
+hosted server, run the opt-in compatibility test:
+
+```powershell
+$env:LAKBAYPASS_TEST_LEGACY_MYSQL = '1'
+.\venv\Scripts\python.exe -m unittest discover -s tests -p test_rewards_legacy_mysql.py
+Remove-Item Env:\LAKBAYPASS_TEST_LEGACY_MYSQL
+```
+
+This test creates uniquely named disposable tables in the configured database
+and drops them afterward. It requires `CREATE TABLE` and `DROP TABLE`
+permissions; it never writes application users, mission claims, or redemptions.
 
 The scanner suite passes real QR pixels through canvas MediaStreams, the actual
 jsQR decoder, HTTP, Flask, and MySQL. Only physical camera acquisition is

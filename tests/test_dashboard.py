@@ -34,7 +34,7 @@ class DashboardTests(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(f'<strong>{total}</strong>'.encode(), response.data)
             self.assertEqual(response.headers['Cache-Control'], 'no-store')
-            self.assertEqual(self.cursor.execute.call_args.args[1], (1,))
+            self.assertEqual(self.cursor.execute.call_args.args[1], (1, 1))
         self.assertEqual(self.cursor.close.call_count, 2)
 
     def test_account_without_claims_shows_zero(self):
@@ -67,6 +67,7 @@ class DashboardTests(unittest.TestCase):
         self.assertEqual(html.count('class="photo-tile"'), 6)
         self.assertEqual(html.count('src="/static/destinations/photo-placeholder.svg"'), 6)
         self.assertIn('href="/logout"', html)
+        self.assertIn('href="/profile"', html)
 
     def test_existing_photo_replaces_only_its_placeholder(self):
         self.sign_in()
