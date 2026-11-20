@@ -16,7 +16,8 @@ from missions import import_mission_cards
 
 database_name = 'lakbaypass_browser_' + uuid.uuid4().hex
 options = dict(host=app.config['MYSQL_HOST'], user=app.config['MYSQL_USER'],
-               passwd=app.config['MYSQL_PASSWORD'], charset='utf8mb4')
+               passwd=app.config['MYSQL_PASSWORD'], port=app.config['MYSQL_PORT'],
+               connect_timeout=app.config['MYSQL_CONNECT_TIMEOUT'], charset='utf8mb4')
 admin = MySQLdb.connect(**options)
 database = None
 try:

@@ -1,15 +1,30 @@
-# Mission cards and automatic claims
+# Database setup, mission cards, and automatic claims
 
-The existing local database is `lakbaypass` on MySQL/MariaDB. Flask uses
-Flask-MySQLdb and the existing `users.id` login session. Database settings can be
-overridden with `LAKBAYPASS_MYSQL_HOST`, `LAKBAYPASS_MYSQL_USER`,
-`LAKBAYPASS_MYSQL_PASSWORD`, and `LAKBAYPASS_MYSQL_DB`.
+Flask uses Flask-MySQLdb and the existing `users.id` login session. The database
+connection settings are configured directly in `app.py`. The configured host is
+`sql12.freesqldatabase.com`, database/user `sql12841075`, port `3306`.
 
-From the project root in PowerShell:
+Environment variables can override the settings in `app.py`:
+`LAKBAYPASS_MYSQL_HOST`, `LAKBAYPASS_MYSQL_USER`,
+`LAKBAYPASS_MYSQL_PASSWORD`, `LAKBAYPASS_MYSQL_DB`, and
+`LAKBAYPASS_MYSQL_PORT`. The port must be an integer from 1 to 65535.
+Connections use `utf8mb4` and a 10-second connection timeout. No additional
+local database configuration file is required.
+
+From the project root in PowerShell, install missing tables and mission cards
+in the configured database, then start the app:
 
 ```powershell
 .\venv\Scripts\python.exe -m flask --app app import-mission-cards
+.\venv\Scripts\python.exe app.py
 ```
+
+The hosted database must already exist; the import does not issue
+`CREATE DATABASE`. The account needs permissions to create tables, read and
+insert rows, and add unique indexes if existing tables lack them. Normal app
+startup does not run the import. Changing the connection settings does not
+transfer existing local users or claims: export and import that data separately
+if it needs to be retained on the hosted database.
 
 This installs `schema.sql` using `CREATE TABLE IF NOT EXISTS`, then imports the
 exact 18 assignments in `missions.py`. It inserts only missing cards. Running it
@@ -58,6 +73,17 @@ Existing sessions using the placeholder key need to log in again. Do not commit
 or copy the local key into source control.
 
 ## Verification
+
+Run the database-independent Python tests first:
+
+```powershell
+.\venv\Scripts\python.exe -m unittest discover -s tests
+```
+
+The hosted account may only have access to its supplied database. Run the MySQL
+integration and scanner browser suites against a separate development MySQL
+server/account with `CREATE DATABASE` permission, using the environment
+overrides above:
 
 ```powershell
 $env:LAKBAYPASS_TEST_MYSQL = '1'

@@ -13,6 +13,26 @@ from flask_mysqldb import MySQL
 from missions import AssignmentConflict, MISSION_TYPES, import_mission_cards, player_progress
 
 app = Flask(__name__)
+app.config.from_mapping(
+    MYSQL_HOST='sql12.freesqldatabase.com',
+    MYSQL_USER='sql12841075',
+    MYSQL_PASSWORD='BdFpCtEVNb',
+    MYSQL_DB='sql12841075',
+    MYSQL_PORT=3306,
+    MYSQL_CONNECT_TIMEOUT=10,
+    MYSQL_CHARSET='utf8mb4',
+    SESSION_COOKIE_SAMESITE='Lax',
+)
+# Environment variables can override the configured database when needed.
+for setting in ('MYSQL_HOST', 'MYSQL_USER', 'MYSQL_PASSWORD', 'MYSQL_DB', 'MYSQL_PORT'):
+    app.config[setting] = os.environ.get(f'LAKBAYPASS_{setting}', app.config[setting])
+try:
+    app.config['MYSQL_PORT'] = int(app.config['MYSQL_PORT'])
+    if not 1 <= app.config['MYSQL_PORT'] <= 65535:
+        raise ValueError
+except (TypeError, ValueError):
+    raise ValueError('MYSQL_PORT / LAKBAYPASS_MYSQL_PORT must be an integer from 1 to 65535.') from None
+
 # Persist a private signing key locally, or use the deployment environment key.
 # The previous public placeholder key cannot protect point-claim identities.
 app.secret_key = os.environ.get('LAKBAYPASS_SECRET_KEY')
@@ -25,14 +45,6 @@ if not app.secret_key:
     except FileExistsError:
         pass
     app.secret_key = key_file.read_text(encoding='utf-8').strip()
-app.config.update(
-    MYSQL_HOST=os.environ.get('LAKBAYPASS_MYSQL_HOST', 'sql12.freesqldatabase.com'),
-    MYSQL_USER=os.environ.get('LAKBAYPASS_MYSQL_USER', 'sql12841075'),
-    MYSQL_PASSWORD=os.environ.get('LAKBAYPASS_MYSQL_PASSWORD', 'BdFpCtEVNb'),
-    MYSQL_DB=os.environ.get('LAKBAYPASS_MYSQL_DB', 'sql12841075'),
-    MYSQL_DB=os.environ.get('LAKBAYPASS_PORT', 3306),
-    SESSION_COOKIE_SAMESITE='Lax',
-)
 mysql = MySQL(app)
 
 

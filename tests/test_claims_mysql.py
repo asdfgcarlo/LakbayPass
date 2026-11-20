@@ -34,7 +34,9 @@ class MySQLClaimTests(unittest.TestCase):
         cls.original_db = lakbay.app.config['MYSQL_DB']
         cls.test_db = 'lakbaypass_test_' + uuid.uuid4().hex
         cls.options = dict(host=lakbay.app.config['MYSQL_HOST'], user=lakbay.app.config['MYSQL_USER'],
-                           passwd=lakbay.app.config['MYSQL_PASSWORD'], charset='utf8mb4')
+                           passwd=lakbay.app.config['MYSQL_PASSWORD'],
+                           port=lakbay.app.config['MYSQL_PORT'],
+                           connect_timeout=lakbay.app.config['MYSQL_CONNECT_TIMEOUT'], charset='utf8mb4')
         cls.admin = MySQLdb.connect(**cls.options)
         with cls.admin.cursor() as cursor:
             cursor.execute(f'CREATE DATABASE `{cls.test_db}` CHARACTER SET utf8mb4')
