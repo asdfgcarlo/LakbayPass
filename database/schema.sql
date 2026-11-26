@@ -8,6 +8,17 @@ CREATE TABLE IF NOT EXISTS users (
     UNIQUE KEY email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS user_memories (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    filename VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    caption VARCHAR(300) NOT NULL DEFAULT '',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_memory_filename (filename),
+    KEY idx_user_memories (user_id, created_at, id),
+    CONSTRAINT fk_memory_user FOREIGN KEY (user_id) REFERENCES users (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS mission_cards (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     destination_slug VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

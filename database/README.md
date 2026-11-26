@@ -187,3 +187,32 @@ test remains a hardware check. The four pixel fixtures in
 `tests/fixtures/mission-qr.json` were generated with Python `qrcode==8.2`, default
 error correction, `box_size=1`, and `border=4`; no QR generator is needed at app
 runtime or to run the committed browser suite.
+
+## Profile photo memories
+
+Install the requirements and run the non-destructive memories migration once:
+
+```powershell
+.\venv\Scripts\python.exe -m pip install -r requirements.txt
+.\venv\Scripts\python.exe -m flask --app app install-memories
+```
+
+New databases also receive `user_memories` from `schema.sql`. Photo rows reference
+the existing account; no accounts, claims, points or rewards are changed.
+
+Photos are stored privately in `instance/memories`, outside `static`. Give the
+application write access and use a persistent volume in production. All app
+workers must share this directory. Back up this directory and the database
+together. Authenticated image routes verify ownership before serving a photo.
+Deleting a memory removes its database row and stored photo.
+
+Each submission accepts 1–3 JPG, PNG or WebP images, at most 10 MB and 40
+megapixels per image. The server verifies decoded image content and re-encodes
+photos without embedded EXIF/GPS metadata. Descriptions are optional, up to 300
+characters. Batch failures roll back rows and remove staged photos.
+
+Run the isolated photo/API tests with
+`.\venv\Scripts\python.exe -m unittest discover -s tests -p test_memories.py`.
+`tests/memories.browser.cjs` runs the full UI flow on disposable SQL and files;
+it uses Playwright with installed Chrome and accepts `PLAYWRIGHT_MODULE` for an
+existing package path. Neither test fixture accesses hosted accounts.

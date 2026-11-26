@@ -7,12 +7,16 @@ from pathlib import Path
 import click
 import MySQLdb
 import MySQLdb.cursors
-from flask import Flask, abort, flash, jsonify, make_response, redirect, render_template, request, session, url_for
+from flask import Flask, abort, flash, jsonify, make_response, redirect, render_template, request, send_from_directory, session, url_for
 from flask_mysqldb import MySQL
+from werkzeug.exceptions import NotFound, RequestEntityTooLarge
 
 from administration import admin_account, admin_overview, install_user_roles, setup_admin_account
 from missions import AssignmentConflict, MISSION_TYPES, import_mission_cards, player_profile, player_progress, player_total_points
 from rewards import REWARDS, RedemptionError, redeem_reward, reward_overview
+from hotels import get_hotels
+from memories import (MemoryError, delete_memory, get_memory, install_memories,
+                      list_memories, save_memories, update_memory_caption)
 
 app = Flask(__name__)
 app.config.from_mapping(
@@ -24,6 +28,7 @@ app.config.from_mapping(
     MYSQL_CONNECT_TIMEOUT=10,
     MYSQL_CHARSET='utf8mb4',
     SESSION_COOKIE_SAMESITE='Lax',
+    MAX_CONTENT_LENGTH=31 * 1024 * 1024,
 )
 # Environment variables can override the configured database when needed.
 for setting in ('MYSQL_HOST', 'MYSQL_USER', 'MYSQL_PASSWORD', 'MYSQL_DB', 'MYSQL_PORT'):
@@ -48,6 +53,17 @@ if not app.secret_key:
         pass
     app.secret_key = key_file.read_text(encoding='utf-8').strip()
 mysql = MySQL(app)
+app.config['MEMORIES_UPLOAD_FOLDER'] = str(Path(app.instance_path) / 'memories')
+
+
+@app.cli.command('install-memories')
+def install_memories_command():
+    """Create the memories table without changing existing account data."""
+    try:
+        install_memories(mysql.connection)
+    except MySQLdb.Error as error:
+        raise click.ClickException(f'Memories setup failed.\n{error}') from error
+    click.echo('Memories storage is ready. Existing accounts and progress were preserved.')
 
 
 @app.cli.command('import-mission-cards')
@@ -246,8 +262,16 @@ def profile():
         destinations = get_destinations()
         for place in destinations:
             place.update(progress['destinations'][place['slug']])
+        session.setdefault('memories_csrf', secrets.token_urlsafe(32))
+        memories, memories_error = [], None
+        try:
+            memories = [memory_payload(memory) for memory in list_memories(mysql.connection, player_id)]
+        except (MySQLdb.Error, MemoryError):
+            app.logger.exception('Could not load memories')
+            memories_error = 'Your memories could not be loaded. Refresh the page to try again.'
         response = make_response(render_template(
             'lakbayProfile.html', profile=progress, destinations=destinations,
+            memories=memories, memories_error=memories_error,
         ))
     response.headers['Cache-Control'] = 'no-store'
     return response
@@ -320,6 +344,7 @@ def destination(slug):
         progress = player_progress(mysql.connection, session.get('id', 0), slug)
         response = make_response(render_template(
             f'destinations/{slug}.html', place=place, username=session['username'], progress=progress,
+            hotels=get_hotels(slug, app.static_folder),
         ))
         response.headers['Cache-Control'] = 'no-store'
         return response
@@ -338,6 +363,104 @@ def claim_player_id():
     if not session.get('loggedin') or type(player_id) is not int or player_id <= 0:
         return None
     return player_id
+
+
+def memory_payload(memory):
+    """Expose owner-facing fields, keeping private storage paths off the client."""
+    created = memory.get('created_at')
+    return dict(id=memory['id'], caption=memory['caption'],
+                image_url=url_for('memory_image', memory_id=memory['id']),
+                created_at=created.isoformat() if hasattr(created, 'isoformat') else created)
+
+
+def memories_write_user():
+    player_id = claim_player_id()
+    if player_id is None:
+        return None, claim_response({'message': 'Log in again to manage your memories.'}, 401)
+    csrf = session.get('memories_csrf', '')
+    supplied = request.headers.get('X-CSRF-Token', '')
+    if not csrf or not secrets.compare_digest(csrf.encode(), supplied.encode()):
+        return None, claim_response({'message': 'Your session expired. Refresh the page and try again.'}, 403)
+    return player_id, None
+
+
+@app.route('/api/memories', methods=['GET', 'POST'])
+def memories_collection():
+    if request.method == 'POST':
+        player_id, error_response = memories_write_user()
+        if error_response is not None:
+            return error_response
+    else:
+        player_id = claim_player_id()
+        if player_id is None:
+            return claim_response({'message': 'Log in again to view your memories.'}, 401)
+    try:
+        if request.method == 'GET':
+            entries = list_memories(mysql.connection, player_id)
+        else:
+            entries = save_memories(mysql.connection, player_id,
+                                    request.files.getlist('images'), request.form.getlist('captions'),
+                                    app.config['MEMORIES_UPLOAD_FOLDER'])
+        payload = {'memories': [memory_payload(memory) for memory in entries]}
+        if request.method == 'POST':
+            payload['message'] = 'Your memories have been saved.'
+        return claim_response(payload, 201 if request.method == 'POST' else 200)
+    except MemoryError as error:
+        return claim_response({'message': str(error)}, error.status_code)
+    except (MySQLdb.Error, OSError):
+        app.logger.exception('Could not read or save memories')
+        return claim_response({'message': 'Your memories could not be loaded or saved. Please try again.'}, 503)
+
+
+@app.route('/api/memories/<int:memory_id>', methods=['PATCH', 'DELETE'])
+def memory_detail(memory_id):
+    player_id, error_response = memories_write_user()
+    if error_response is not None:
+        return error_response
+    try:
+        if request.method == 'DELETE':
+            delete_memory(mysql.connection, player_id, memory_id, app.config['MEMORIES_UPLOAD_FOLDER'])
+            return claim_response({'message': 'Memory deleted.'})
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict) or not isinstance(data.get('caption'), str):
+            return claim_response({'message': 'Enter a description of up to 300 characters.'}, 400)
+        memory = update_memory_caption(mysql.connection, player_id, memory_id, data['caption'])
+        return claim_response({'message': 'Description saved.', 'memory': memory_payload(memory)})
+    except MemoryError as error:
+        return claim_response({'message': str(error)}, error.status_code)
+    except (MySQLdb.Error, OSError):
+        app.logger.exception('Could not update memory')
+        return claim_response({'message': 'This memory could not be updated. Please try again.'}, 503)
+
+
+@app.get('/memories/<int:memory_id>/image')
+def memory_image(memory_id):
+    player_id = claim_player_id()
+    if player_id is None:
+        return claim_response({'message': 'Log in again to view this memory.'}, 401)
+    try:
+        memory = get_memory(mysql.connection, player_id, memory_id)
+        if memory is None:
+            return claim_response({'message': 'Memory not found.'}, 404)
+        try:
+            response = send_from_directory(app.config['MEMORIES_UPLOAD_FOLDER'], memory['filename'])
+        except NotFound:
+            return claim_response({'message': 'This photo is no longer available.'}, 404)
+        response.headers['Cache-Control'] = 'private, no-store'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        return response
+    except MemoryError as error:
+        return claim_response({'message': str(error)}, error.status_code)
+    except MySQLdb.Error:
+        app.logger.exception('Could not load memory image')
+        return claim_response({'message': 'This photo could not be loaded. Please try again.'}, 503)
+
+
+@app.errorhandler(RequestEntityTooLarge)
+def upload_too_large(error):
+    if request.path == '/api/memories':
+        return claim_response({'message': 'This upload is too large. Add up to 3 photos, each 10 MB or smaller.'}, 413)
+    return error
 
 
 @app.get('/api/destinations/<slug>/missions')

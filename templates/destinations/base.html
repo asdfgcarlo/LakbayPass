@@ -12,6 +12,7 @@
     <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
     <script src="{{ url_for('static', filename='vendor/jsQR-1.4.0.js') }}" defer></script>
     <script src="{{ url_for('static', filename='scanner.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='hotels.js') }}" defer></script>
   </head>
   <body class="destination-page destination-{{ place.slug }}">
     <a class="skip-link" href="#destination-content">Skip to destination</a>
@@ -46,6 +47,8 @@
           </section>
         </div>
       </article>
+
+      {% include 'components/hotels.html' %}
 
       <section class="missions" aria-labelledby="missions-title">
         <div class="missions-heading">

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='account-menu.css') }}">
     <script src="{{ url_for('static', filename='account-menu.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='memories.js') }}" defer></script>
   </head>
   <body class="profile-page{% if profile %} tier-{{ profile.tier|lower }}{% endif %}">
     <a class="skip-link" href="#profile-content">Skip to profile</a>
@@ -50,6 +51,8 @@
           <p class="profile-balance-note">Your tier is based on all points earned.</p>
         </div>
       </section>
+
+      {% include 'components/memories.html' %}
 
       <section class="profile-destinations" aria-labelledby="places-title">
         <div class="places-heading">

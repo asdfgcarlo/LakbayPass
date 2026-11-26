@@ -66,6 +66,7 @@ lakbay.mysql = SimpleNamespace(connection=object())
 lakbay.player_total_points = balance
 lakbay.player_progress = progress
 lakbay.player_profile = profile
+lakbay.list_memories = lambda connection, user_id: []
 lakbay.reward_overview = rewards
 lakbay.admin_account = lambda connection, user_id: USERS[user_id]
 lakbay.admin_overview = lambda connection: dict(total_users=len(USERS), users=list(USERS.values()),

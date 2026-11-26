@@ -1,0 +1,196 @@
+{
+  "verified_on": "2026-11-26",
+  "destinations": {
+    "palawan": [
+      {
+        "id": "hue-puerto-princesa",
+        "name": "Hue Hotels and Resorts Puerto Princesa",
+        "location": "San Manuel, Puerto Princesa, Palawan",
+        "description": "Hue offers a rooftop pool, Aminah Spa and Filipino dining at LA-UD Restaurant. Its San Manuel address on Puerto Princesa North Road makes it a city base for a road trip to Mitra's Ranch in Santa Monica.",
+        "url": "https://www.thehuehotel.com/hue-puerto-princesa",
+        "sources": [
+          {
+            "url": "https://www.thehuehotel.com/hue-puerto-princesa",
+            "type": "official hotel website",
+            "supports": "Current property existence, exact San Manuel / Puerto Princesa North Road address, rooftop pool, Aminah Spa, LA-UD Restaurant and Filipino cuisine. Official Book Now link goes to simplebooking.it hotel 6709."
+          },
+          {
+            "url": "https://citytourism.puertoprincesa.ph/mitra-ranch/",
+            "type": "official city tourism",
+            "supports": "Ranch address is Mitra Road, Barangay Santa Monica, Puerto Princesa; road access from city proper by tricycle, van or national-highway jeepney/multicab."
+          },
+          {
+            "url": "https://www.tpb.gov.ph/wp-content/uploads/2025/05/Technical-Specification_Site-Validation-of-Post-Tours.pdf",
+            "type": "Philippine Tourism Promotions Board",
+            "supports": "2025 official post-tour site-validation itinerary pairs Hue Hotel accommodation and LA-UD lunch with a Mitra's Ranch / Baker's Hill visit. Do not turn itinerary timings into hotel-to-ranch drive times."
+          }
+        ],
+        "photo": {
+          "asset_base": "hue-puerto-princesa",
+          "alt": "LA-UD Restaurant at Hue Hotels and Resorts Puerto Princesa",
+          "author": "Filipinayzd",
+          "author_url": "https://commons.wikimedia.org/wiki/User:Filipinayzd",
+          "source_url": "https://commons.wikimedia.org/wiki/File:La-ud_Restaurant_at_Hue_Hotels_and_Resorts_Puerto_Princesa.jpg",
+          "original_url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/La-ud_Restaurant_at_Hue_Hotels_and_Resorts_Puerto_Princesa.jpg",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Resized, converted to WebP and displayed with a crop."
+        }
+      }
+    ],
+    "vigan": [
+      {
+        "id": "hotel-luna",
+        "name": "Hotel Luna",
+        "location": "Vigan City, Ilocos Sur",
+        "description": "Hotel Luna combines a restored mansion and art museum with a swimming pool and gym. Its address at V. Delos Reyes and Gen. Luna streets places it in Vigan's Heritage Village near Calle Crisologo.",
+        "url": "https://www.hotelluna.ph/public/home",
+        "sources": [
+          {
+            "url": "https://www.hotelluna.ph/public/home",
+            "type": "official hotel website",
+            "supports": "Current hotel existence; restored mansion with art; Heritage Village location; exact V. Delos Reyes / Gen. Luna address."
+          },
+          {
+            "url": "https://www.hotelluna.ph/facilities",
+            "type": "official hotel website",
+            "supports": "Museum, swimming pool and gym are separately named facilities."
+          },
+          {
+            "url": "https://www.travelocity.ca/Calle-Crisologo-Hotels.0-l553248634207006680-0.Travel-Guide-Filter-Hotels",
+            "type": "verified booking platform",
+            "supports": "Hotel Luna is listed near Calle Crisologo. Do not publish a precise walking time; platform distances are not uniformly consistent with other travel websites."
+          }
+        ],
+        "photo": {
+          "asset_base": "hotel-luna",
+          "alt": "Hotel Luna exterior in Vigan's Heritage Village",
+          "author": "Tubanismo",
+          "author_url": "https://commons.wikimedia.org/wiki/User:Tubanismo",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Hotel_Luna_in_Calle_Crisologo.jpg",
+          "original_url": "https://upload.wikimedia.org/wikipedia/commons/0/06/Hotel_Luna_in_Calle_Crisologo.jpg",
+          "license": "CC BY-SA 4.0",
+          "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+          "changes": "Resized, converted to WebP and displayed with a crop."
+        }
+      }
+    ],
+    "cebu": [
+      {
+        "id": "fantasy-lodge-cebu",
+        "name": "Fantasy Lodge Cebu",
+        "location": "Dalahikan, Samboan, Cebu",
+        "description": "Fantasy Lodge Cebu offers rooms, a swimming pool, kawa hot baths and massage treatments in Dalahikan, Samboan. The lodge lists Binalayan Hidden Falls among its local activities, making it a practical base for exploring Samboan's waterfalls.",
+        "url": "https://fantasy-lodge.com/",
+        "sources": [
+          {
+            "url": "https://fantasy-lodge.com/?page_id=40",
+            "supports": "Official resort location in Dalahikan, Samboan, South Cebu."
+          },
+          {
+            "url": "https://fantasy-lodge.com/amenities/",
+            "supports": "Swimming pool, kawa hot bath, massage with Tañon Strait views."
+          },
+          {
+            "url": "https://fantasy-lodge.com/activities/binalayan-falls-hidden-falls/",
+            "supports": "Binalayan Hidden Falls specifically listed as a Samboan activity from Fantasy Lodge. Avoid publishing travel duration even though resort quotes an estimate."
+          },
+          {
+            "url": "https://www.booking.com/hotel/ph/fantasy-lodge-samboan.html",
+            "supports": "Verified booking listing and property existence."
+          },
+          {
+            "url": "https://fantasy-lodge.com/",
+            "supports": "Rooms and accommodation options."
+          }
+        ],
+        "photo": null,
+        "photo_status": "User approved labeled fallback; no explicit photo reuse permission verified."
+      }
+    ],
+    "siquijor": [
+      {
+        "id": "coco-grove-beach-resort",
+        "name": "Coco Grove Beach Resort",
+        "location": "Tubod, San Juan, Siquijor",
+        "description": "Coco Grove Beach Resort offers air-conditioned cottages and villas, three swimming pools, and three restaurants. Its beachfront setting in Tubod, San Juan provides a base in the same municipality as Paliton Beach.",
+        "url": "https://www.cocogrovebeachresort.com/",
+        "sources": [
+          {
+            "url": "https://www.cocogrovebeachresort.com/the-resort/facilities/",
+            "supports": "Air-conditioned cottages and villas, beach location, three swimming pools, three restaurants."
+          },
+          {
+            "url": "https://siquijorprovince.com/accommodations/",
+            "supports": "Official provincial tourism accommodation listing gives Tubod, San Juan address and resort website."
+          },
+          {
+            "url": "https://siquijorprovince.com/siquijor-coastal-tour/",
+            "supports": "Official provincial tourism places Paliton Beach in Paliton, San Juan."
+          }
+        ],
+        "photo": {
+          "asset_base": "coco-grove-beach-resort",
+          "alt": "Coco Grove Beach Resort's beach in Siquijor",
+          "author": "Renzelle Mae Abasolo",
+          "author_url": "https://www.flickr.com/people/37796692@N05",
+          "source_url": "https://commons.wikimedia.org/wiki/File:Coco_Grove_Beach_Resort,_Siquijor,_Philippines_(8160857823).jpg",
+          "original_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Coco_Grove_Beach_Resort%2C_Siquijor%2C_Philippines_%288160857823%29.jpg",
+          "license": "CC BY 2.0",
+          "license_url": "https://creativecommons.org/licenses/by/2.0/",
+          "changes": "Resized, converted to WebP and displayed with a crop."
+        }
+      }
+    ],
+    "siargao": [
+      {
+        "id": "mariden-resort",
+        "name": "Mariden Resort & Homestay Siargao",
+        "location": "Brgy. Lobogon, Del Carmen, Siargao, Surigao del Norte",
+        "description": "Mariden offers air-conditioned rooms with private bathrooms, an outdoor swimming pool and free Starlink Wi-Fi. Its Del Carmen location provides a main-island base for the road transfer to the Del Carmen port boats serving Sugba Lagoon.",
+        "url": "https://www.maridenresort.com/",
+        "sources": [
+          {
+            "url": "https://www.maridenresort.com/",
+            "supports": "Official accommodation information or attraction departure location."
+          },
+          {
+            "url": "https://www.maridenresort.com/rooms",
+            "supports": "Official accommodation information or attraction departure location."
+          },
+          {
+            "url": "https://www.maridenresort.com/guides/sugba-lagoon",
+            "supports": "Official accommodation information or attraction departure location."
+          },
+          {
+            "url": "https://www.visitdelcarmen.com/sugba-lagoon/",
+            "supports": "Official accommodation information or attraction departure location."
+          }
+        ],
+        "photo": null,
+        "photo_status": "User approved labeled fallback; no explicit photo reuse permission verified."
+      }
+    ],
+    "camiguin": [
+      {
+        "id": "blue-lagoon-cottages",
+        "name": "Camiguin Blue Lagoon Cottages",
+        "location": "Taguines Lagoon, Benoni, Mahinog, Camiguin",
+        "description": "Camiguin Blue Lagoon Cottages offers bamboo-style accommodation by Taguines Lagoon, with private balconies and an on-site restaurant. Its Benoni location is a main-island base in Mahinog for boat trips to Mantigue Island.",
+        "url": "https://camiguinbluelagoon.com/",
+        "sources": [
+          {
+            "url": "https://camiguinbluelagoon.com/",
+            "supports": "Official accommodation information or attraction departure location."
+          },
+          {
+            "url": "https://dotregion10.com/mantigue-island-2/",
+            "supports": "Official accommodation information or attraction departure location."
+          }
+        ],
+        "photo": null,
+        "photo_status": "User approved labeled fallback; no explicit photo reuse permission verified."
+      }
+    ]
+  }
+}

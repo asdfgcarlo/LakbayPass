@@ -1,0 +1,43 @@
+{% if hotels %}
+<section class="hotel-recommendations" aria-labelledby="hotels-title">
+  <div class="hotels-heading">
+    <h2 id="hotels-title">Where to Stay</h2>
+    <p>Find a comfortable place to stay during your adventure.</p>
+  </div>
+  <ul class="hotel-grid" role="list" aria-label="Recommended hotels near {{ place.attraction }}">
+    {% for hotel in hotels %}
+    <li class="hotel-card" data-hotel="{{ hotel.id }}">
+      <figure class="hotel-figure">
+        <div class="hotel-photo">
+          {% if hotel.image %}
+          <img class="hotel-image" src="{{ url_for('static', filename=hotel.image) }}"
+            {% if hotel.image_large %}srcset="{{ url_for('static', filename=hotel.image) }} 640w, {{ url_for('static', filename=hotel.image_large) }} 960w" sizes="(max-width: 680px) calc(100vw - 48px), (max-width: 900px) calc((100vw - 48px) / 2), 560px"{% endif %}
+            width="640" height="480" alt="{{ hotel.photo.alt }}" loading="lazy" decoding="async">
+          {% endif %}
+          <div class="hotel-photo-fallback"{% if hotel.image %} hidden{% endif %}>
+            <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 10h6l2-4h6l2 4h6v16H5V10Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="17" r="5" stroke="currentColor" stroke-width="1.5"/></svg>
+            <p>Property photo unavailable</p>
+            <span>See photos on the hotel’s website.</span>
+          </div>
+        </div>
+        {% if hotel.photo and hotel.image %}
+        <figcaption class="hotel-photo-credit">
+          Photo: <a href="{{ hotel.photo.source_url }}" target="_blank" rel="noopener noreferrer">{{ hotel.photo.author }}</a>
+          · <a href="{{ hotel.photo.license_url }}" target="_blank" rel="noopener noreferrer">{{ hotel.photo.license }}</a> · resized / cropped
+        </figcaption>
+        {% endif %}
+      </figure>
+      <div class="hotel-content">
+        <h3>{{ hotel.name }}</h3>
+        <p class="hotel-location">{{ hotel.location }}</p>
+        <p class="hotel-description">{{ hotel.description }}</p>
+        <a class="hotel-link" href="{{ hotel.url }}" target="_blank" rel="noopener noreferrer" aria-label="View Hotel: {{ hotel.name }} (opens in a new tab)">
+          View Hotel
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 5H5v10h10v-2M10 4h6v6m0-6-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}

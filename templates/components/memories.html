@@ -1,0 +1,68 @@
+<section class="profile-memories" aria-labelledby="memories-title" data-memories data-csrf="{{ session.memories_csrf }}" data-endpoint="{{ url_for('memories_collection') }}">
+  <div class="memories-heading">
+    <div>
+      <h2 id="memories-title">Your memories</h2>
+      <p>A photo collection from your travels, just for you.</p>
+    </div>
+    <button class="memory-button memory-primary" id="add-memories" type="button" aria-expanded="false" aria-controls="memories-form">Add Memories</button>
+  </div>
+  <noscript><p class="memory-notice">Enable JavaScript to add and manage your memories. You can still open your saved photos below.</p></noscript>
+  <p class="memory-status" id="memories-status" role="status">{{ memories_error or '' }}</p>
+  <form id="memories-form" class="memories-form" hidden>
+    <fieldset id="memories-fields">
+      <legend>Add your photos</legend>
+      <p class="memory-help" id="memories-help">Choose 1–3 photos per save. Add them together or one at a time. JPG, PNG or WebP, up to 10 MB each.</p>
+      <label class="memory-file-label" for="memory-files">Choose photos</label>
+      <input id="memory-files" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="memories-help memories-count memories-error">
+      <p id="memories-count" class="memory-help" role="status">0 of 3 photos selected · at least 1 required</p>
+      <ul class="memory-previews" id="memory-previews" role="list" aria-label="Selected photos"></ul>
+      <p class="memory-error" id="memories-error" role="alert"></p>
+      <div class="memory-actions">
+        <button class="memory-button memory-primary" id="save-memories" type="submit">Save Memories</button>
+        <button class="memory-button" id="cancel-memories" type="button">Cancel</button>
+      </div>
+    </fieldset>
+  </form>
+  <p class="memories-empty" id="memories-empty"{% if memories or memories_error %} hidden{% endif %}>No memories yet. Add a photo to start your collection.</p>
+  <ul class="memories-gallery" id="memories-gallery" role="list" aria-label="Your saved memories">
+    {% for memory in memories %}
+    <li class="memory-card" data-memory-id="{{ memory.id }}" data-caption="{{ memory.caption }}">
+      <a class="memory-open" href="{{ memory.image_url }}" aria-label="Open memory: {{ memory.caption or 'Photo without a description' }}">
+        <img src="{{ memory.image_url }}" alt="{{ memory.caption or 'Travel memory' }}" width="640" height="480" loading="lazy" decoding="async">
+      </a>
+      <p class="memory-caption{% if not memory.caption %} memory-help{% endif %}">{{ memory.caption or 'No description yet.' }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <dialog class="memory-viewer" id="memory-viewer" aria-labelledby="memory-viewer-title" aria-describedby="memory-viewer-caption">
+    <div class="memory-viewer-heading">
+      <h2 id="memory-viewer-title">Your memory</h2>
+      <button class="memory-button" id="close-memory" type="button" autofocus>Close</button>
+    </div>
+    <img class="memory-large-image" id="memory-large-image" alt="">
+    <p class="memory-viewer-caption" id="memory-viewer-caption"></p>
+    <div class="memory-actions" id="memory-viewer-actions">
+      <button class="memory-button" id="edit-memory" type="button">Edit description</button>
+      <button class="memory-button memory-delete" id="delete-memory" type="button">Delete memory</button>
+    </div>
+    <form id="memory-edit-form" hidden>
+      <label for="memory-edit-caption">Description <span class="memory-help">(optional)</span></label>
+      <textarea id="memory-edit-caption" maxlength="300" rows="3" aria-describedby="memory-edit-count"></textarea>
+      <p class="memory-help" id="memory-edit-count">0 / 300 characters</p>
+      <div class="memory-actions">
+        <button class="memory-button memory-primary" type="submit">Save description</button>
+        <button class="memory-button" id="cancel-memory-edit" type="button">Cancel</button>
+      </div>
+    </form>
+    <div id="memory-delete-confirm" hidden>
+      <p>Delete this photo and its description? This cannot be undone.</p>
+      <div class="memory-actions">
+        <button class="memory-button memory-primary" id="confirm-memory-delete" type="button">Delete permanently</button>
+        <button class="memory-button" id="cancel-memory-delete" type="button">Cancel</button>
+      </div>
+    </div>
+    <p class="memory-error" id="memory-viewer-error" role="alert"></p>
+    <p class="memory-help" id="memory-viewer-status" role="status"></p>
+  </dialog>
+</section>
