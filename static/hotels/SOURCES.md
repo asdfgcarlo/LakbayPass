@@ -25,6 +25,18 @@ The six local image files are the `-640.webp` and `-960.webp` variants of the th
 
 Photograph dates describe the historical source images; they do not guarantee present-day appearance. All three Commons license records were readable during the audit. Direct original-file checks returned HTTP 200 for Hue and Hotel Luna; Coco Grove's original URL was rate-limited with HTTP 429, while its Commons record remained readable.
 
+**Official property website photographs**
+
+The user requested completion of the remaining three hotel pictures on 2026-11-26. These photographs come from the named properties' official websites and are saved locally as `-640.webp` and `-960.webp` variants. They are cropped to 4:3, resized and converted to WebP. The credit names the publishing property; a separate photographer was not identified. Original rights are retained: no Creative Commons license or reuse permission is asserted, and `license_url` is `null`. Attribution links to the official source page; rights text is not presented as a license link.
+
+| Asset base / depicted subject | Official source and original file |
+| --- | --- |
+| `fantasy-lodge-cebu` — swimming pool and tropical trees | [Fantasy Lodge Cebu](https://fantasy-lodge.com/); [original homepage resort photograph](https://fantasy-lodge.com/_nuxt/hero2.CS9nsnww.jpg). The crop centers on the pool to keep the swimmer fully visible. |
+| `mariden-resort` — swimming pool, fountains and cottages | [Mariden Resort & Homestay Siargao](https://www.maridenresort.com/); [original homepage photograph](https://www.maridenresort.com/images/general/hero-desktop-opt.webp). |
+| `blue-lagoon-cottages` — bamboo-walled dining area | [Camiguin Blue Lagoon Cottages](https://camiguinbluelagoon.com/); [original homepage slider photograph](https://camiguinbluelagoon.com/images/uploads/586/3947_618slider_001.webp). |
+
+All three original files were retrieved and visually checked against the official pages. Each derivative has a `.webp.json` record containing its source, original URL, credit, retained rights and modifications. These source photographs do not guarantee the properties' present-day appearance.
+
 **Photo fallback policy**
 
-The user approved a clearly labeled non-photographic fallback for **Fantasy Lodge Cebu, Mariden Resort and Camiguin Blue Lagoon Cottages** because an explicitly reusable actual-property photograph was not verified. Their catalog `photo` values remain `null`. Do not substitute generic scenery, another hotel, a stock photograph or an AI-generated hotel image. Public access to a hotel website, booking listing or social-media image does not establish reuse permission; Blue Lagoon's official site explicitly states “All Rights Reserved.” Obtain permission covering this use or verify an appropriate license before adding a photograph, then record its author, source, original file, license and edits alongside the asset. Recheck property facts and departure arrangements when changing the catalog.
+All six catalog entries now have actual property photographs. A clearly labeled non-photographic fallback remains for absent local assets or failed image requests, preserving the hotel description and official link. Do not substitute unrelated scenery, another property or an AI-generated hotel image. Keep original credits and rights records when replacing any photograph.

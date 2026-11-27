@@ -11,7 +11,6 @@ const python = path.join(root, 'venv', process.platform === 'win32' ? 'Scripts/p
 const catalog = JSON.parse(fs.readFileSync(path.join(root, 'data/hotel_recommendations.json'), 'utf8')).destinations;
 const slugs = ['palawan', 'vigan', 'cebu', 'siquijor', 'siargao', 'camiguin'];
 const sizes = [[320, 568], [390, 844], [768, 1024], [1440, 900]];
-const approvedFallbacks = new Set(['cebu', 'siargao', 'camiguin']);
 const edgeCasesOnly = process.argv.includes('--edge-cases');
 const captureScreenshots = !process.argv.includes('--no-screenshots');
 const artifacts = path.join(root, '.impeccable/review/hotels');
@@ -102,26 +101,25 @@ async function assertDestination(page, slug, width, { javaScript = true } = {}) 
     assert.ok(rel.includes('noopener') && rel.includes('noreferrer'));
     assert.equal(await link.getAttribute('aria-label'), `View Hotel: ${hotel.name} (opens in a new tab)`);
     assert.ok((await link.boundingBox()).height >= 44, `${slug}/${width}: minimum touch target`);
+    assert.ok(hotel.photo, `${slug}: every recommended hotel has a property photo`);
     if (hotel.photo) {
       const image = card.locator('img.hotel-image');
       assert.equal(await image.count(), 1);
       assert.equal(await image.getAttribute('alt'), hotel.photo.alt);
       assert.equal(await image.getAttribute('src'), `/static/hotels/${hotel.photo.asset_base}-640.webp`);
-      assert.equal(await image.evaluate(node => node.complete && node.naturalWidth > 0), true, `${slug}/${width}: licensed image loads`);
+      assert.equal(await image.evaluate(node => node.complete && node.naturalWidth > 0), true, `${slug}/${width}: property image loads`);
       assert.equal(await image.isVisible(), true);
       assert.equal(await card.locator('.hotel-photo-fallback').isVisible(), false);
       const credit = card.locator('.hotel-photo-credit');
       assert.equal(await credit.isVisible(), true);
       assert.equal(await credit.getByRole('link', { name: hotel.photo.author, exact: true }).getAttribute('href'), hotel.photo.source_url);
-      assert.equal(await credit.getByRole('link', { name: hotel.photo.license, exact: true }).getAttribute('href'), hotel.photo.license_url);
+      if (hotel.photo.license_url) {
+        assert.equal(await credit.getByRole('link', { name: hotel.photo.license, exact: true }).getAttribute('href'), hotel.photo.license_url);
+      } else {
+        assert.equal(await credit.getByRole('link').count(), 1, 'Official-site credit has no invented license link');
+        assert.ok((await credit.innerText()).includes(hotel.photo.license));
+      }
       assert.match(await credit.innerText(), /resized\s*\/\s*cropped/);
-    } else {
-      assert.ok(approvedFallbacks.has(slug), `${slug}: photo-free property requires the approved destination fallback`);
-      assert.equal(await card.locator('img.hotel-image').count(), 0);
-      assert.equal(await card.locator('.hotel-photo-fallback').isVisible(), true);
-      assert.equal(await card.locator('.hotel-photo-fallback p').innerText(), 'Property photo unavailable');
-      assert.match(await card.locator('.hotel-photo-fallback > span').innerText(), /See photos on the hotel’s website\./);
-      assert.equal(await card.locator('.hotel-photo-credit').count(), 0, 'No credit is attached to an unavailable photo');
     }
   }
   assert.equal(await page.locator('.mission-list > li').count(), 3, `${slug}: original missions retained`);
@@ -224,7 +222,7 @@ async function assertKeyboardNavigation(page, hotel) {
         }
       }
     }
-    console.log('PASS forced image failures: three licensed-photo properties at 390 and 1440; hidden image/credit, labelled fallback, preserved hotel links.');
+    console.log('PASS forced image failures: all six properties at 390 and 1440; hidden image/credit, labelled fallback, preserved hotel links.');
     await broken.close();
 
     const nojs = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 320, height: 568 } });
@@ -237,11 +235,11 @@ async function assertKeyboardNavigation(page, hotel) {
       await settle(fallbackPage, { javaScript: false });
       await assertDestination(fallbackPage, slug, 320, { javaScript: false });
       await assertPopup(fallbackPage, fallbackPage.locator('.hotel-link').first(), catalog[slug][0].url);
-      console.log(`PASS ${slug}: no-JavaScript content, images/approved fallback and native hotel link.`);
+      console.log(`PASS ${slug}: no-JavaScript content, property photo and native hotel link.`);
     }
     await nojs.close();
     assert.deepEqual(errors, [], 'No browser runtime errors');
-    console.log('PASS: all six hotel routes at four sizes; 12 full-page destination screenshots plus mobile/desktop forced fallbacks; local licensed photos/credits; three approved placeholders; real image errors; no-JavaScript content and links; original missions, scanner and gallery backlink; no horizontal overflow.');
+    console.log('PASS: all six hotel routes at four sizes; six local property photos with source/rights credits; real image errors; no-JavaScript content and links; original missions, scanner and gallery backlink; no horizontal overflow.');
   } finally {
     if (browser) await browser.close();
     if (server.exitCode === null) {

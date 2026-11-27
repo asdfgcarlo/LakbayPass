@@ -23,7 +23,7 @@
         {% if hotel.photo and hotel.image %}
         <figcaption class="hotel-photo-credit">
           Photo: <a href="{{ hotel.photo.source_url }}" target="_blank" rel="noopener noreferrer">{{ hotel.photo.author }}</a>
-          · <a href="{{ hotel.photo.license_url }}" target="_blank" rel="noopener noreferrer">{{ hotel.photo.license }}</a> · resized / cropped
+          · {% if hotel.photo.license_url %}<a href="{{ hotel.photo.license_url }}" target="_blank" rel="noopener noreferrer">{{ hotel.photo.license }}</a>{% else %}{{ hotel.photo.license }}{% endif %} · resized / cropped
         </figcaption>
         {% endif %}
       </figure>

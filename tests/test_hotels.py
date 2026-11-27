@@ -34,7 +34,7 @@ EXPECTED = {
                  'Taguines Lagoon, Benoni, Mahinog, Camiguin',
                  'https://camiguinbluelagoon.com/'),
 }
-FALLBACK_DESTINATIONS = {'cebu', 'siargao', 'camiguin'}
+OFFICIAL_PHOTO_DESTINATIONS = {'cebu', 'siargao', 'camiguin'}
 SUBTITLE = 'Find a comfortable place to stay during your adventure.'
 
 
@@ -109,22 +109,28 @@ class HotelCatalogTests(unittest.TestCase):
                 for source in hotel['sources']:
                     self.assert_https(source['url'])
                     self.assertTrue(source['supports'].strip())
-                if slug in FALLBACK_DESTINATIONS:
-                    self.assertIsNone(hotel['photo'])
-                    self.assertIn('approved', hotel['photo_status'].lower())
+                self.assertIsNotNone(hotel['photo'])
 
-    def test_licensed_photos_are_real_local_webp_variants_with_provenance(self):
-        for slug in set(EXPECTED) - FALLBACK_DESTINATIONS:
+    def test_all_six_photos_are_real_local_webp_variants_with_provenance(self):
+        for slug in EXPECTED:
             with self.subTest(slug=slug):
                 hotel = get_hotels(slug, lakbay.app.static_folder)[0]
                 photo = hotel['photo']
-                self.assertIn(photo['license'], {'CC BY 2.0', 'CC BY-SA 4.0'})
                 for field in ('author', 'alt', 'changes'):
                     self.assertTrue(photo[field].strip(), field)
-                for field in ('source_url', 'original_url', 'license_url', 'author_url'):
+                for field in ('source_url', 'original_url', 'author_url'):
                     self.assert_https(photo[field])
-                self.assertIn('commons.wikimedia.org', photo['source_url'])
-                self.assertIn('creativecommons.org/licenses/', photo['license_url'])
+                if slug in OFFICIAL_PHOTO_DESTINATIONS:
+                    self.assertEqual(photo['source_url'], EXPECTED[slug][2])
+                    self.assertEqual(photo['license'], 'All rights reserved')
+                    self.assertIsNone(photo['license_url'])
+                    self.assertEqual(urlparse(photo['original_url']).netloc,
+                                     urlparse(photo['source_url']).netloc)
+                else:
+                    self.assertIn(photo['license'], {'CC BY 2.0', 'CC BY-SA 4.0'})
+                    self.assert_https(photo['license_url'])
+                    self.assertIn('commons.wikimedia.org', photo['source_url'])
+                    self.assertIn('creativecommons.org/licenses/', photo['license_url'])
                 for field, width in (('image', 640), ('image_large', 960)):
                     self.assertIsNotNone(hotel[field])
                     asset = Path(lakbay.app.static_folder) / hotel[field]
@@ -226,7 +232,7 @@ class HotelRouteTests(unittest.TestCase):
                 self.assertIn('/static/scanner.js', scripts)
                 self.assertIn('defer', scripts['/static/hotels.js']['attrs'])
 
-    def test_visible_photo_has_attribution_and_no_unlicensed_substitutions(self):
+    def test_visible_photo_has_matching_source_and_rights_credit(self):
         for slug in EXPECTED:
             with self.subTest(slug=slug):
                 page = self.page(slug)
@@ -235,11 +241,6 @@ class HotelRouteTests(unittest.TestCase):
                 credits = page.find('figcaption', 'hotel-photo-credit', within=card)
                 fallback = page.find(class_name='hotel-photo-fallback', within=card)[0]
                 self.assertIn('Property photo unavailable', text(fallback))
-                if slug in FALLBACK_DESTINATIONS:
-                    self.assertEqual(images, [])
-                    self.assertEqual(credits, [])
-                    self.assertNotIn('hidden', fallback['attrs'])
-                    continue
                 hotel = get_hotels(slug, lakbay.app.static_folder)[0]
                 photo = hotel['photo']
                 self.assertEqual(len(images), 1)
@@ -252,7 +253,10 @@ class HotelRouteTests(unittest.TestCase):
                 self.assertIn(photo['license'], text(credits[0]))
                 self.assertIn('resized / cropped', text(credits[0]))
                 links = {link['attrs']['href'] for link in page.find('a', within=credits[0])}
-                self.assertEqual(links, {photo['source_url'], photo['license_url']})
+                expected_links = {photo['source_url']}
+                if photo['license_url']:
+                    expected_links.add(photo['license_url'])
+                self.assertEqual(links, expected_links)
                 self.assertIn('hidden', fallback['attrs'])
 
     def test_all_cards_render_honest_fallback_when_static_assets_are_absent(self):

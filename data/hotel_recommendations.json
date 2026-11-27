@@ -104,8 +104,17 @@
             "supports": "Rooms and accommodation options."
           }
         ],
-        "photo": null,
-        "photo_status": "User approved labeled fallback; no explicit photo reuse permission verified."
+        "photo": {
+          "asset_base": "fantasy-lodge-cebu",
+          "alt": "Swimming pool surrounded by tropical trees at Fantasy Lodge Cebu",
+          "author": "Fantasy Lodge Cebu",
+          "author_url": "https://fantasy-lodge.com/",
+          "source_url": "https://fantasy-lodge.com/",
+          "original_url": "https://fantasy-lodge.com/_nuxt/hero2.CS9nsnww.jpg",
+          "license": "All rights reserved",
+          "license_url": null,
+          "changes": "Cropped to 4:3 around the swimming pool, resized and converted to WebP."
+        }
       }
     ],
     "siquijor": [
@@ -167,8 +176,17 @@
             "supports": "Official accommodation information or attraction departure location."
           }
         ],
-        "photo": null,
-        "photo_status": "User approved labeled fallback; no explicit photo reuse permission verified."
+        "photo": {
+          "asset_base": "mariden-resort",
+          "alt": "Swimming pool with fountains and cottages at Mariden Resort in Siargao",
+          "author": "Mariden Resort",
+          "author_url": "https://www.maridenresort.com/",
+          "source_url": "https://www.maridenresort.com/",
+          "original_url": "https://www.maridenresort.com/images/general/hero-desktop-opt.webp",
+          "license": "All rights reserved",
+          "license_url": null,
+          "changes": "Cropped to 4:3, resized and converted to WebP."
+        }
       }
     ],
     "camiguin": [
@@ -188,8 +206,17 @@
             "supports": "Official accommodation information or attraction departure location."
           }
         ],
-        "photo": null,
-        "photo_status": "User approved labeled fallback; no explicit photo reuse permission verified."
+        "photo": {
+          "asset_base": "blue-lagoon-cottages",
+          "alt": "Bamboo-walled dining area at Camiguin Blue Lagoon Cottages",
+          "author": "Camiguin Blue Lagoon Cottages",
+          "author_url": "https://camiguinbluelagoon.com/",
+          "source_url": "https://camiguinbluelagoon.com/",
+          "original_url": "https://camiguinbluelagoon.com/images/uploads/586/3947_618slider_001.webp",
+          "license": "All rights reserved",
+          "license_url": null,
+          "changes": "Cropped to 4:3, resized and converted to WebP."
+        }
       }
     ]
   }

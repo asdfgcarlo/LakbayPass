@@ -21,16 +21,17 @@ single recommendation uses a photo/text split on desktop and stacks on phones;
 multiple recommendations use independent cards in the same visual grammar.
 
 FORM: code-led extension; no concept roll or new visual identity. Photo credits
-link to the original work and its reuse license. Image failure reveals an honest
+link to the original work and its reuse license when recorded. Image failure reveals an honest
 text fallback while location, description and the official link remain usable.
 seed: none (ordinary extension)
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-The user approved labeled photo fallbacks wherever explicit reuse permission is
-unclear. This applies to Fantasy Lodge Cebu, Mariden Resort and Camiguin Blue
-Lagoon Cottages. No copyrighted official-site photos are copied for those cards.
-Hue, Hotel Luna and Coco Grove use verified CC-licensed property photographs.
+The user subsequently requested completion of all six hotel photographs.
+Fantasy Lodge Cebu, Mariden Resort and Camiguin Blue Lagoon Cottages now use
+actual photos from their official websites with source credits and original
+rights retained; no open license or reuse permission is asserted. Hue, Hotel
+Luna and Coco Grove retain verified CC-licensed property photographs.
 Never replace a property photo with unrelated scenery or add invented travel
 times, prices, review scores or amenities. Verify source details as of2026-11-26.
 
